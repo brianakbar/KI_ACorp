@@ -1,25 +1,21 @@
 ﻿@page
-@model LoginModel
+@model RegisterModel
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Register";
 }
 
 <div class="row m-0">
-    <div class="col-6 p-5">
+    <div class="col-6 p-5 mt-5">
         <div class="container">
-            <h1 class="text-primary-color mb-5">Log In</h1>
-            <div class="mb-3">
+            <h1 class="text-primary-color mb-5">Create an account</h1>
+            <div class="mb-5">
                 <label for="inputEmail" class="text-primary-color">Email</label>
                 <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp">
             </div>
-            <div class="mb-5">
-                <label for="inputPassword1" class="form-label text-primary-color">Password</label>
-                <input type="password" class="form-control" id="inputPassword1">
-            </div>
-            <button type="button" class="btn btn-primary py-2 d-flex justify-content-center mb-5" style="width: 100%">Log In</button>
+            <button type="button" class="btn btn-primary py-2 d-flex justify-content-center mb-5" style="width: 100%">Confirm</button>
             <div class="mb-4 d-flex justify-content-center">
                 <div class="flex-grow-1"><hr></div>
-                <p class="m-0 mt-1 mx-1 p-0">Atau</p>
+                <p class="m-0 mt-1 mx-1 p-0">Atau login dengan</p>
                 <div class="flex-grow-1"><hr></div>
             </div>
             <button type="button" class="btn border bg-transparent py-2 d-flex align-items-center justify-content-center" style="width: 100%">
