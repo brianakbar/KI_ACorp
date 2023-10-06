@@ -1,3 +1,19 @@
+a.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+}
+
+a {
+    color: #0077cc;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
 #hero-image {
     background: linear-gradient(180deg, #FFF 0%, rgba(0, 0, 0, 0.17) 47.92%, #FFF 100%), url("images/hero.jpeg");
     background-size: cover;
