@@ -1,8 +1,3 @@
-.background {
-    width: 100%;
-    height: 100%;
-}
-
 #hero-image {
     background: linear-gradient(180deg, #FFF 0%, rgba(0, 0, 0, 0.17) 47.92%, #FFF 100%), url("images/hero.jpeg");
     background-size: cover;

@@ -2,6 +2,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.Configure<RouteOptions>(options => {
+    options.LowercaseUrls = true;
+});
 
 var app = builder.Build();
 
