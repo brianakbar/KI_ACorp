@@ -1,0 +1,42 @@
+:root {
+  --primary-color: #71D359;
+  --darker-primary-color: #67be51;
+}
+
+html {
+  font-size: 14px;
+}
+
+.bg-primary-color {
+  background-color: var(--primary-color);
+}
+
+.text-primary-color {
+  color: var(--primary-color);
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+  background-color: var(--darker-primary-color);
+  border-color: var(--darker-primary-color);
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
