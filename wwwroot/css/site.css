@@ -1,6 +1,7 @@
 :root {
   --primary-color: #71D359;
   --darker-primary-color: #67be51;
+  --grey-color: #F0F2F5;
 }
 
 html {
@@ -9,6 +10,10 @@ html {
 
 .bg-primary-color {
   background-color: var(--primary-color);
+}
+
+.bg-grey-color {
+  background-color: var(--grey-color);
 }
 
 .text-primary-color {
