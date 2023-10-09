@@ -1,0 +1,280 @@
+.uploadframe, .uploadframe * {
+    box-sizing: border-box;
+    }
+
+.uploadframe {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    position: relative;
+    }
+
+.body-content {
+    background: #ffffff;
+    border-radius: 10px;
+    flex-shrink: 0;
+    width: 914px;
+    height: 758px;
+    position: relative;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.20);
+    }
+
+.upload-ktp {
+    flex-shrink: 0;
+    width: 690px;
+    height: 185px;
+    position: static;
+   }
+
+.uploadtitle-ktp {
+    color: #262626;
+    text-align: left;
+    font: 800 20px 'Poppins', sans-serif;
+    position: absolute;
+    left: 19px;
+    top: 31px;
+    width: 256px;
+   }
+
+.uploaddesc1-ktp {
+    color: #262626;
+    text-align: justified;
+    font: 500 15px 'Poppins', sans-serif;
+    position: absolute;
+    right: 205px;
+    left: 19px;
+    top: 69px;
+    height: 27px;
+   }
+
+.uploadbox-ktp {
+    width: 671px;
+    height: 113px;
+    position: static;
+   }
+
+.uploaddesc2-ktp {
+    width: 199px;
+    height: 39px;
+    position: static;
+   }
+
+.uploaddesc2-1-ktp {
+    color: #262626;
+    text-align: justified;
+    font: 500 15px 'Poppins', sans-serif;
+    position: absolute;
+    right: 525px;
+    left: 290px;
+    top: 166px;
+   }
+
+.uploaddesc2-2-ktp {
+    color: #a1a1a1;
+    text-align: justified;
+    font: 500 13px 'Poppins', sans-serif;
+    position: absolute;
+    right: 475px;
+    left: 240px;
+    top: 185px;
+   }
+
+.uploadbox-outline-ktp {
+    border-radius: 10px;
+    border-style: dashed;
+    border-color: #71d359;
+    border-width: 1px;
+    width: 671px;
+    height: 113px;
+    position: absolute;
+    left: calc(50% - 438px);
+    top: 103px;
+   }
+
+.upload-icon-ktp {
+    position: absolute;
+    left: 322px;
+    top: 118px;
+    overflow: visible;
+   }
+
+.upload-cv {
+    flex-shrink: 0;
+    width: 690px;
+    height: 185px;
+    position: static;
+   }
+
+.uploadtitle-cv {
+    color: #262626;
+    text-align: left;
+    font: 800 20px 'Poppins', sans-serif;
+    position: absolute;
+    left: 19px;
+    top: 238px;
+    width: 256px;
+   }
+
+.uploaddesc1-cv {
+    color: #262626;
+    text-align: justified;
+    font: 500 15px 'Poppins', sans-serif;
+    position: absolute;
+    right: 205px;
+    left: 19px;
+    top: 276px;
+    height: 27px;
+   }
+
+.uploadbox-cv {
+    width: 671px;
+    height: 113px;
+    position: static;
+   }
+
+.uploaddesc2-cv {
+    width: 199px;
+    height: 39px;
+    position: static;
+   }
+
+.uploaddesc2-1-cv {
+    color: #262626;
+    text-align: justified;
+    font: 500 15px 'Poppins', sans-serif;
+    position: absolute;
+    right: 525px;
+    left: 290px;
+    top: 373px;
+   }
+
+.uploaddesc2-2-cv {
+    color: #a1a1a1;
+    text-align: justified;
+    font: 500 13px 'Poppins', sans-serif;
+    position: absolute;
+    right: 475px;
+    left: 240px;
+    top: 392px;
+   }
+
+.uploadbox-outline-cv {
+    border-radius: 10px;
+    border-style: dashed;
+    border-color: #71d359;
+    border-width: 1px;
+    width: 671px;
+    height: 113px;
+    position: absolute;
+    left: calc(50% - 438px);
+    top: 310px;
+   }
+
+.upload-icon-cv {
+    position: absolute;
+    left: 322px;
+    top: 325px;
+    overflow: visible;
+   }
+
+.upload-vid {
+    flex-shrink: 0;
+    width: 690px;
+    height: 185px;
+    position: static;
+   }
+
+.uploadtitle-vid {
+    color: #262626;
+    text-align: left;
+    font: 800 20px 'Poppins', sans-serif;
+    position: absolute;
+    left: 19px;
+    top: 443px;
+    width: 256px;
+   }
+
+.uploaddesc1-vid {
+    color: #262626;
+    text-align: justified;
+    font: 500 15px 'Poppins', sans-serif;
+    position: absolute;
+    right: 205px;
+    left: 19px;
+    top: 481px;
+    height: 27px;
+   }
+
+.uploadbox-vid {
+    width: 671px;
+    height: 113px;
+    position: static;
+   }
+
+.uploaddesc2-vid {
+    width: 199px;
+    height: 39px;
+    position: static;
+   }
+
+.uploaddesc2-1-vid {
+    color: #262626;
+    text-align: justified;
+    font: 500 15px 'Poppins', sans-serif;
+    position: absolute;
+    right: 525px;
+    left: 290px;
+    top: 578px;
+   }
+
+.uploaddesc2-2-vid {
+    color: #a1a1a1;
+    text-align: justified;
+    font: 500 13px 'Poppins', sans-serif;
+    position: absolute;
+    right: 475px;
+    left: 240px;
+    top: 597px;
+   }
+
+.uploadbox-outline-vid {
+    border-radius: 10px;
+    border-style: dashed;
+    border-color: #71d359;
+    border-width: 1px;
+    width: 671px;
+    height: 113px;
+    position: absolute;
+    left: calc(50% - 438px);
+    top: 515px;
+   }
+
+.upload-icon-vid {
+    position: absolute;
+    left: 322px;
+    top: 530px;
+    overflow: visible;
+   }
+
+.button {
+    background: #71d359;
+    border-radius: 6px;
+    padding: 0px 24px 0px 24px;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 209px;
+    height: 48px;
+    position: absolute;
+    left: 638px;
+    top: 658px;
+    }
+
+
+    
+
