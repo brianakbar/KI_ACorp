@@ -2,16 +2,26 @@ using KiAcorp.Data;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql;
 
+const string AuthenticationType = "CookieAuth";
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.Configure<RouteOptions>(options => {
+builder.Services.Configure<RouteOptions>(options =>
+{
     options.LowercaseUrls = true;
 });
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new Exception("Connection string is null");
 
-builder.Services.AddDbContext<ApplicationDbContext>(options => {
+builder.Services.AddAuthentication(AuthenticationType).AddCookie(AuthenticationType, options =>
+{
+    options.Cookie.Name = AuthenticationType;
+    options.LoginPath = "/login";
+});
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new Exception("Connection string is null");
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
 
@@ -29,6 +39,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

@@ -4,7 +4,8 @@
     ViewData["Title"] = "Register";
 }
 
-@if(Model.Email == null) {
+@if (Model.Email == null)
+{
     <div class="row m-0">
         <div class="col-6 p-5 mt-5">
             <div class="container">
@@ -12,21 +13,38 @@
                 <form asp-page-handler="email" method="post">
                     <div class="mb-5">
                         <label for="inputEmail" class="text-primary-color">Email</label>
-                        <input type="email" class="form-control" id="inputEmail" name="inputEmail" aria-describedby="emailHelp">
+                        <input type="email" class="form-control" id="inputEmail" name="inputEmail"
+                            aria-describedby="emailHelp">
                     </div>
-                    <button type="submit" class="btn btn-primary py-2 d-flex justify-content-center mb-5" style="width: 100%">Confirm</button>
+                    <button type="submit" class="btn btn-primary py-2 d-flex justify-content-center mb-5"
+                        style="width: 100%">Confirm</button>
                 </form>
                 <div class="mb-4 d-flex justify-content-center">
-                    <div class="flex-grow-1"><hr></div>
+                    <div class="flex-grow-1">
+                        <hr>
+                    </div>
                     <p class="m-0 mt-1 mx-1 p-0">Atau login dengan</p>
-                    <div class="flex-grow-1"><hr></div>
+                    <div class="flex-grow-1">
+                        <hr>
+                    </div>
                 </div>
-                <button type="button" class="btn border bg-transparent py-2 d-flex align-items-center justify-content-center" style="width: 100%">
-                    <svg class="me-3" xmlns="http://www.w3.org/2000/svg" width="31" height="30" viewBox="0 0 31 30" fill="none">
-                        <path d="M28.1654 12.5519H27.125V12.5H15.5V17.5H22.7999C21.7349 20.4106 18.8732 22.5 15.5 22.5C11.2201 22.5 7.75001 19.1419 7.75001 15C7.75001 10.8581 11.2201 7.5 15.5 7.5C17.4756 7.5 19.273 8.22125 20.6415 9.39937L24.295 5.86375C21.9881 3.78312 18.9023 2.5 15.5 2.5C8.36678 2.5 2.58334 8.09688 2.58334 15C2.58334 21.9031 8.36678 27.5 15.5 27.5C22.6332 27.5 28.4167 21.9031 28.4167 15C28.4167 14.1619 28.3276 13.3438 28.1654 12.5519Z" fill="#FFC107"/>
-                        <path d="M4.07263 9.18188L8.3164 12.1938C9.46469 9.4425 12.2457 7.5 15.5 7.5C17.4756 7.5 19.273 8.22125 20.6415 9.39937L24.295 5.86375C21.9881 3.78312 18.9023 2.5 15.5 2.5C10.5387 2.5 6.23617 5.21062 4.07263 9.18188Z" fill="#FF3D00"/>
-                        <path d="M15.5 27.4999C18.8364 27.4999 21.8679 26.2643 24.16 24.2549L20.1623 20.9812C18.8219 21.9677 17.184 22.5012 15.5 22.4999C12.1404 22.4999 9.28774 20.4268 8.21307 17.5337L4.00095 20.6743C6.13865 24.7224 10.4799 27.4999 15.5 27.4999Z" fill="#4CAF50"/>
-                        <path d="M28.1654 12.5519H27.125V12.5H15.5V17.5H22.7999C22.2904 18.8853 21.3728 20.0957 20.1603 20.9819L20.1623 20.9806L24.16 24.2544C23.8771 24.5031 28.4167 21.25 28.4167 15C28.4167 14.1619 28.3275 13.3438 28.1654 12.5519Z" fill="#1976D2"/>
+                <button type="button"
+                    class="btn border bg-transparent py-2 d-flex align-items-center justify-content-center"
+                    style="width: 100%">
+                    <svg class="me-3" xmlns="http://www.w3.org/2000/svg" width="31" height="30" viewBox="0 0 31 30"
+                        fill="none">
+                        <path
+                            d="M28.1654 12.5519H27.125V12.5H15.5V17.5H22.7999C21.7349 20.4106 18.8732 22.5 15.5 22.5C11.2201 22.5 7.75001 19.1419 7.75001 15C7.75001 10.8581 11.2201 7.5 15.5 7.5C17.4756 7.5 19.273 8.22125 20.6415 9.39937L24.295 5.86375C21.9881 3.78312 18.9023 2.5 15.5 2.5C8.36678 2.5 2.58334 8.09688 2.58334 15C2.58334 21.9031 8.36678 27.5 15.5 27.5C22.6332 27.5 28.4167 21.9031 28.4167 15C28.4167 14.1619 28.3276 13.3438 28.1654 12.5519Z"
+                            fill="#FFC107" />
+                        <path
+                            d="M4.07263 9.18188L8.3164 12.1938C9.46469 9.4425 12.2457 7.5 15.5 7.5C17.4756 7.5 19.273 8.22125 20.6415 9.39937L24.295 5.86375C21.9881 3.78312 18.9023 2.5 15.5 2.5C10.5387 2.5 6.23617 5.21062 4.07263 9.18188Z"
+                            fill="#FF3D00" />
+                        <path
+                            d="M15.5 27.4999C18.8364 27.4999 21.8679 26.2643 24.16 24.2549L20.1623 20.9812C18.8219 21.9677 17.184 22.5012 15.5 22.4999C12.1404 22.4999 9.28774 20.4268 8.21307 17.5337L4.00095 20.6743C6.13865 24.7224 10.4799 27.4999 15.5 27.4999Z"
+                            fill="#4CAF50" />
+                        <path
+                            d="M28.1654 12.5519H27.125V12.5H15.5V17.5H22.7999C22.2904 18.8853 21.3728 20.0957 20.1603 20.9819L20.1623 20.9806L24.16 24.2544C23.8771 24.5031 28.4167 21.25 28.4167 15C28.4167 14.1619 28.3275 13.3438 28.1654 12.5519Z"
+                            fill="#1976D2" />
                     </svg>
                     Sign in with Google
                 </button>
@@ -37,11 +55,12 @@
         </div>
     </div>
 }
-else {
+else
+{
     <div class="container mt-5">
         <button class="bg-transparent border-0 d-flex align-items-center">
             <svg class="me-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="#231F20"/>
+                <path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="#231F20" />
             </svg>
             <a asp-area="" asp-page="/Register" class="text-body p-0 m-0" style="text-decoration: none;">Kembali</a>
         </button>
@@ -59,7 +78,7 @@ else {
                     <label class="form-check-label" for="lakilaki">
                         Laki-laki
                     </label>
-                    </div>
+                </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="flexRadioDefault" id="perempuan">
                     <label class="form-check-label" for="perempuan">
@@ -83,4 +102,3 @@ else {
         </div>
     </div>
 }
-
