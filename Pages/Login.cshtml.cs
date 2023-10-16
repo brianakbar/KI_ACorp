@@ -37,7 +37,7 @@ public class LoginModel : PageModel
     {
         if (!ModelState.IsValid) return Page();
 
-        if (await _authService.Login(Credential.Email, Credential.Password, HttpContext))
+        if (await _authService.LoginAsync(Credential.Email, Credential.Password, HttpContext))
         {
             return RedirectToPage("/dashboard/index");
         }

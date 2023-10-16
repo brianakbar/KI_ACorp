@@ -18,7 +18,7 @@ public class AuthService
         _db = db;
     }
 
-    public async Task<bool> Register(User newUser)
+    public async Task<bool> RegisterAsync(User newUser)
     {
         if (await FindUserAsync(newUser.Email) != null) return false;
 
@@ -29,12 +29,16 @@ public class AuthService
         return true;
     }
 
-    public async Task<bool> Login(string email, string password, HttpContext context)
+    public async Task<bool> LoginAsync(string email, string password, HttpContext context)
     {
-        if (FindUserAsync(email, password) != null)
+        User? foundUser = await FindUserAsync(email, password);
+
+        if (foundUser != null)
         {
             List<Claim> claims = new() {
-                new(ClaimTypes.Email, email)
+                new(ClaimTypes.Name, foundUser.Fullname),
+                new(ClaimTypes.Email, email),
+                new(ClaimTypes.MobilePhone, foundUser.AesPhoneNumber ?? "")
             };
             ClaimsIdentity identity = new(claims, AuthenticationType);
             ClaimsPrincipal principal = new(identity);

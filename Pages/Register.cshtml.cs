@@ -31,13 +31,6 @@ public class RegisterModel : PageModel
         Email = RegisterForm.Email;
     }
 
-    public void OnGetRegister()
-    {
-        _logger.LogInformation("halo");
-        _logger.LogInformation(Email);
-        _logger.LogInformation(RegisterForm.Email);
-    }
-
     public async Task<IActionResult> OnPostRegisterAsync(string email)
     {
         RegisterForm.Email = email;
@@ -50,8 +43,8 @@ public class RegisterModel : PageModel
             AesPhoneNumber = RegisterForm.PhoneNumber
         };
 
-        if (!await _authService.Register(newUser)) return RedirectToPage("/register");
-        if (!await _authService.Login(email, newUser.AesPassword, HttpContext)) return RedirectToPage("/index");
+        if (!await _authService.RegisterAsync(newUser)) return RedirectToPage("/register");
+        if (!await _authService.LoginAsync(email, newUser.AesPassword, HttpContext)) return RedirectToPage("/index");
 
         return RedirectToPage("/dashboard/index");
     }
