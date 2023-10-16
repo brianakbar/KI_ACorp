@@ -1,8 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using ACorp.Authentication;
+using KiAcorp.Data;
+using KiAcorp.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace ACorp.Pages;
 
@@ -14,10 +18,14 @@ public class LoginModel : PageModel
     public Credential Credential { get; set; }
 
     private readonly ILogger<LoginModel> _logger;
+    private readonly ApplicationDbContext _db;
+    private readonly AuthService _authService;
 
-    public LoginModel(ILogger<LoginModel> logger)
+    public LoginModel(ApplicationDbContext db, ILogger<LoginModel> logger)
     {
+        _db = db;
         _logger = logger;
+        _authService = new AuthService(_db);
     }
 
     public void OnGet()
@@ -29,16 +37,8 @@ public class LoginModel : PageModel
     {
         if (!ModelState.IsValid) return Page();
 
-        if (Credential.Email == "user@gmail.com" && Credential.Password == "password")
+        if (await _authService.Login(Credential.Email, Credential.Password, HttpContext))
         {
-            List<Claim> claims = new() {
-                new(ClaimTypes.Email, Credential.Email)
-            };
-            ClaimsIdentity identity = new(claims, AuthenticationType);
-            ClaimsPrincipal principal = new(identity);
-
-            await HttpContext.SignInAsync(AuthenticationType, principal);
-
             return RedirectToPage("/dashboard/index");
         }
 

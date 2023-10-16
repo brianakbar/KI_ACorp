@@ -11,10 +11,12 @@
             <div class="container">
                 <h1 class="text-primary-color mb-5">Create an account</h1>
                 <form asp-page-handler="email" method="post">
+                    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
                     <div class="mb-5">
-                        <label for="inputEmail" class="text-primary-color">Email</label>
-                        <input type="email" class="form-control" id="inputEmail" name="inputEmail"
+                        <label for="inputEmail" asp-for="RegisterForm.Email" class="text-primary-color">Email</label>
+                        <input type="email" asp-for="RegisterForm.Email" class="form-control" id="inputEmail"
                             aria-describedby="emailHelp">
+                        <span class="text-danger" asp-validation-for="RegisterForm.Email"></span>
                     </div>
                     <button type="submit" class="btn btn-primary py-2 d-flex justify-content-center mb-5"
                         style="width: 100%">Confirm</button>
@@ -59,46 +61,64 @@ else
 {
     <div class="container mt-5">
         <button class="bg-transparent border-0 d-flex align-items-center">
-            <svg class="me-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="#231F20" />
-            </svg>
-            <a asp-area="" asp-page="/Register" class="text-body p-0 m-0" style="text-decoration: none;">Kembali</a>
+            <a asp-area="" asp-page="/Register" class="text-body p-0 m-0" style="text-decoration: none;">
+                <svg class="me-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="#231F20" />
+                </svg>
+                Kembali
+            </a>
         </button>
         <div class="p-4 m-5 border mx-auto" style="max-width: 880px;">
             <h2 class="text-primary-color mb-5">Create Account</h2>
             <hr>
-            <div class="mb-3">
-                <label for="inputName" class="form-label text-primary-color">Nama</label>
-                <input type="text" class="form-control" id="inputName">
-            </div>
-            <div class="mb-3">
-                <label class="form-label text-primary-color" style="display: block">Jenis Kelamin</label>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="lakilaki" checked>
-                    <label class="form-check-label" for="lakilaki">
-                        Laki-laki
-                    </label>
+            <form asp-page-handler="register" method="post">
+                <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+                <input type="hidden" name="email" value=@Model.Email />
+                <div class="mb-3">
+                    <label for="inputName" asp-for="RegisterForm.FullName"
+                        class="form-label text-primary-color">Nama</label>
+                    <input type="text" asp-for="RegisterForm.FullName" class="form-control" id="inputName">
+                    <span class="text-danger" asp-validation-for="RegisterForm.FullName"></span>
                 </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="perempuan">
-                    <label class="form-check-label" for="perempuan">
-                        Perempuan
-                    </label>
+                <div class="mb-3">
+                    <label class="form-label text-primary-color" style="display: block">Jenis Kelamin</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="RegisterForm.Gender" value="Male"
+                            id="lakilaki" checked>
+                        <label class="form-check-label" asp-for="RegisterForm.Gender" for="lakilaki">
+                            Laki-laki
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" asp-for="RegisterForm.Gender" value="Female"
+                            id="perempuan">
+                        <label class="form-check-label" asp-for="RegisterForm.Gender" for="perempuan">
+                            Perempuan
+                        </label>
+                    </div>
+                    <span class="text-danger" asp-validation-for="RegisterForm.Gender"></span>
                 </div>
-            </div>
-            <div class="mb-3">
-                <label for="inputNoHP" class="form-label text-primary-color">Nomor HP</label>
-                <input type="text" class="form-control" id="inputNoHP">
-            </div>
-            <div class="mb-3">
-                <label for="inputPassword" class="form-label text-primary-color">Password</label>
-                <input type="password" class="form-control" id="inputPassword">
-            </div>
-            <div class="mb-5">
-                <label for="inputKonfirmasiPassword" class="form-label text-primary-color">Konfirmasi Password</label>
-                <input type="password" class="form-control" id="inputKonfirmasiPassword">
-            </div>
-            <button type="button" class="btn btn-primary px-4 py-2">Daftar</button>
+                <div class="mb-3">
+                    <label for="inputNoHP" asp-for="RegisterForm.PhoneNumber" class="form-label text-primary-color">Nomor
+                        HP</label>
+                    <input type="text" asp-for="RegisterForm.PhoneNumber" class="form-control" id="inputNoHP">
+                    <span class="text-danger" asp-validation-for="RegisterForm.PhoneNumber"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="inputPassword" asp-for="RegisterForm.Password"
+                        class="form-label text-primary-color">Password</label>
+                    <input type="password" asp-for="RegisterForm.Password" class="form-control" id="inputPassword">
+                    <span class="text-danger" asp-validation-for="RegisterForm.Password"></span>
+                </div>
+                <div class="mb-5">
+                    <label for="inputKonfirmasiPassword" asp-for="RegisterForm.ConfirmPassword"
+                        class="form-label text-primary-color">Konfirmasi Password</label>
+                    <input type="password" asp-for="RegisterForm.ConfirmPassword" class="form-control"
+                        id="inputKonfirmasiPassword">
+                    <span class="text-danger" asp-validation-for="RegisterForm.ConfirmPassword"></span>
+                </div>
+                <button type="submit" class="btn btn-primary px-4 py-2">Daftar</button>
+            </form>
         </div>
     </div>
 }
