@@ -8,7 +8,7 @@ namespace ACorp.Pages.Dashboard;
 [Authorize]
 public class FileModel : PageModel
 {
-    private IWebHostEnvironment _environment;
+    private readonly IWebHostEnvironment _environment;
 
     public FileModel(IWebHostEnvironment environment)
     {
