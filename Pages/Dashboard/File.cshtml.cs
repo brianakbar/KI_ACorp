@@ -1,21 +1,33 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+
 
 namespace ACorp.Pages.Dashboard;
 
 [Authorize]
 public class FileModel : PageModel
 {
-    private readonly ILogger<FileModel> _logger;
+    private readonly IWebHostEnvironment _environment;
 
-    public FileModel(ILogger<FileModel> logger)
+    public FileModel(IWebHostEnvironment environment)
     {
-        _logger = logger;
+        _environment = environment;
+
     }
+
+    [BindProperty]
+    public IFormFile Upload { get; set; }
 
     public void OnGet()
     {
 
+    }
+
+    public async Task OnPostAsync()
+    {
+        var file = Path.Combine(_environment.ContentRootPath, "Storage", Upload.FileName);
+        using var fileStream = new FileStream(file, FileMode.Create);
+        await Upload.CopyToAsync(fileStream);
     }
 }

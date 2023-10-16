@@ -1,67 +1,46 @@
 ﻿@page
 @model FileModel
 @{
-    ViewData["Title"] = "Berkas";
+        ViewData["Title"] = "Berkas";
 }
 
 <h1 class="display-5 fw-bold mb-3">Berkas</h1>
-@* <div id="body-content" class="bg-white d-flex align-items-center justify-content-center">
-     <button type="button" class="btn btn-primary px-4 py-2">File Upload</button> 
 
-</div> *@
-
-<div class="uploadframe" >
-  	<div class="body-content" >
-        <div class="upload-ktp" >
-                <div class="uploadtitle-ktp" >Upload KTP </div>
-                <div class="uploaddesc1-ktp" >Upload KTP anda sesuai ketentuan </div>
-                <div class="uploadbox-ktp" >
-                    <div class="uploaddesc2-ktp" >
-                            <div class="uploaddesc2-1-ktp" >Upload disini </div>
-                            <div class="uploaddesc2-2-ktp" >atau geser dan letakkan disini </div>
-                    </div>
-                    <div class="uploadbox-outline-ktp" >
-                    </div>
-                    <svg class="upload-icon-ktp" width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M34.8302 15.0255C34.7473 14.8356 34.6311 14.6619 34.4873 14.5128L23.9872 4.01275C23.8381 3.86887 23.6644 3.75272 23.4745 3.66975C23.422 3.64525 23.366 3.63125 23.31 3.612C23.1636 3.56217 23.0111 3.53215 22.8567 3.52275C22.82 3.51925 22.7867 3.5 22.75 3.5H10.5C8.56975 3.5 7 5.06975 7 7V35C7 36.9302 8.56975 38.5 10.5 38.5H31.5C33.4303 38.5 35 36.9302 35 35V15.75C35 15.7133 34.9807 15.68 34.9772 15.6415C34.9687 15.487 34.9387 15.3345 34.888 15.1882C34.8705 15.1322 34.8547 15.078 34.8302 15.0255ZM29.0255 14H24.5V9.4745L29.0255 14ZM10.5 35V7H21V15.75C21 16.2141 21.1844 16.6592 21.5126 16.9874C21.8408 17.3156 22.2859 17.5 22.75 17.5H31.5L31.5035 35H10.5Z" fill="black"/>
-                            <path d="M14 21H28V24.5H14V21ZM14 28H28V31.5H14V28ZM14 14H17.5V17.5H14V14Z" fill="black"/>
-                    </svg>
-                </div>
+<form class="card" method="post" enctype="multipart/form-data">
+        <div class="card-header">
+                <p class="fw-bold fs-3 m-0">Upload KTP</p>
         </div>
-        
-        <div class="upload-cv" >
-                <div class="uploadtitle-cv" >Upload CV </div>
-                <div class="uploaddesc1-cv" >Upload CV anda sesuai ketentuan </div>
-                <div class="uploadbox-cv" >
-                    <div class="uploaddesc2-cv" >
-                            <div class="uploaddesc2-1-cv" >Upload disini </div>
-                            <div class="uploaddesc2-2-cv" >atau geser dan letakkan disini </div>
-                    </div>
-                    <div class="uploadbox-outline-cv" >
-                    </div>
-                    <svg class="upload-icon-cv" width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M34.8302 15.0255C34.7473 14.8356 34.6311 14.6619 34.4873 14.5128L23.9872 4.01275C23.8381 3.86887 23.6644 3.75272 23.4745 3.66975C23.422 3.64525 23.366 3.63125 23.31 3.612C23.1636 3.56217 23.0111 3.53215 22.8567 3.52275C22.82 3.51925 22.7867 3.5 22.75 3.5H10.5C8.56975 3.5 7 5.06975 7 7V35C7 36.9302 8.56975 38.5 10.5 38.5H31.5C33.4303 38.5 35 36.9302 35 35V15.75C35 15.7133 34.9807 15.68 34.9772 15.6415C34.9687 15.487 34.9387 15.3345 34.888 15.1882C34.8705 15.1322 34.8547 15.078 34.8302 15.0255ZM29.0255 14H24.5V9.4745L29.0255 14ZM10.5 35V7H21V15.75C21 16.2141 21.1844 16.6592 21.5126 16.9874C21.8408 17.3156 22.2859 17.5 22.75 17.5H31.5L31.5035 35H10.5Z" fill="black"/>
-                            <path d="M14 21H28V24.5H14V21ZM14 28H28V31.5H14V28ZM14 14H17.5V17.5H14V14Z" fill="black"/>
-                    </svg>
-                </div>
+        <div class="card-body">
+                <p>Silahkan upload KTP Anda dalam jpg, jpeg, atau png.</p>
+                <input type="file" asp-for="Upload" accept="image/png, image/jpeg, image/jpg" />
         </div>
-
-        <div class="upload" >
-                <div class="uploadtitle-vid" >Upload Video </div>
-                <div class="uploaddesc1-vid" >Upload video kemampuan anda untuk mempermudah seleksi </div>
-                <div class="uploadbox-vid" >
-                    <div class="uploaddesc2-vid" >
-                            <div class="uploaddesc2-1-vid" >Upload disini </div>
-                            <div class="uploaddesc2-2-vid" >atau geser dan letakkan disini </div>
-                    </div>
-                    <div class="uploadbox-outline-vid" >
-                    </div>
-                    <svg class="upload-icon-vid" width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7.875 3.9375V38.0625H34.125V12.5921L33.7575 12.1813L25.8825 4.30631L25.4704 3.93881L7.875 3.9375ZM10.5 6.5625H23.625V14.4375H31.5V35.4375H10.5V6.5625ZM26.25 8.44988L29.6139 11.8125H26.25V8.44856V8.44988ZM17.0625 17.3486V29.8988L19.0312 28.6702L25.5938 24.7327L27.4811 23.625L25.5938 22.5173L19.0312 18.5798L17.0625 17.3486ZM19.6875 21.9844L22.4359 23.625L19.6875 25.2656V21.9844Z" fill="black"/>
-                    </svg>
-                </div>
+        <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
         </div>
+</form>
 
-        <button class="button" >Submit</button>
-    </div>
-</div>
+<form class="card mt-3" method="post" enctype="multipart/form-data">
+        <div class="card-header">
+                <p class="fw-bold fs-3 m-0">Upload CV</p>
+        </div>
+        <div class="card-body">
+                <p>Silahkan upload CV Anda dalam format doc, docx, atau pdf.</p>
+                <input type="file" asp-for="Upload" accept=".doc,.docs,.pdf" />
+        </div>
+        <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+</form>
+
+<form class="card mt-3" method="post" enctype="multipart/form-data">
+        <div class="card-header">
+                <p class="fw-bold fs-3 m-0">Upload Video</p>
+        </div>
+        <div class="card-body">
+                <p>Silahkan upload Video Anda</p>
+                <input type="file" asp-for="Upload" accept="video/*" />
+        </div>
+        <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+</form>
