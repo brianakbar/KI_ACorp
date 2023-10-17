@@ -12,7 +12,17 @@
         </div>
         <div class="card-body">
                 <p>Silahkan upload KTP Anda dalam jpg, jpeg, atau png.</p>
-                <input type="file" asp-for="UploadKTP" accept="image/png, image/jpeg, image/jpg" />
+                <p>Uploaded File:
+                        @if (Model.DocumentKTP != null)
+                        {
+                                <span>@Model.DocumentKTP.Name</span>
+                        }
+                        else
+                        {
+                                <span>None</span>
+                        }
+                </p>
+                <input type="file" asp-for="Upload" accept="image/png, image/jpeg, image/jpg" />
         </div>
         <div class="card-footer">
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -25,7 +35,17 @@
         </div>
         <div class="card-body">
                 <p>Silahkan upload CV Anda dalam format doc, docx, atau pdf.</p>
-                <input type="file" asp-for="UploadCV" accept=".doc,.docs,.pdf" />
+                <p>Uploaded File:
+                        @if (Model.DocumentCV != null)
+                        {
+                                <span>@Model.DocumentCV.Name</span>
+                        }
+                        else
+                        {
+                                <span>None</span>
+                        }
+                </p>
+                <input type="file" asp-for="Upload" accept=".doc,.docs,.pdf" />
         </div>
         <div class="card-footer">
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -38,7 +58,17 @@
         </div>
         <div class="card-body">
                 <p>Silahkan upload Video Anda</p>
-                <input type="file" asp-for="UploadVideo" accept="video/*" />
+                <p>Uploaded File:
+                        @if (Model.DocumentVideo != null)
+                        {
+                                <span>@Model.DocumentVideo.Name</span>
+                        }
+                        else
+                        {
+                                <span>None</span>
+                        }
+                </p>
+                <input type="file" asp-for="Upload" accept="video/*" />
         </div>
         <div class="card-footer">
                 <button type="submit" class="btn btn-primary">Submit</button>

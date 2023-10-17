@@ -1,4 +1,4 @@
-namespace ACorp.Authentication;
+namespace ACorp.Application;
 
 using System.Security.Claims;
 using KiAcorp.Data;

@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using ACorp.Authentication;
+using ACorp.Application;
 using KiAcorp.Data;
 using KiAcorp.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -11,60 +11,70 @@ namespace ACorp.Pages.Dashboard;
 [Authorize]
 public class FileModel : PageModel
 {
+    private readonly ILogger<FileModel> _logger;
     private readonly IWebHostEnvironment _environment;
     private readonly ApplicationDbContext _db;
     private readonly AuthService _authService;
+    private readonly DocumentService _documentService;
 
-    public FileModel(ApplicationDbContext db, IWebHostEnvironment environment)
+    public FileModel(ILogger<FileModel> logger, ApplicationDbContext db, IWebHostEnvironment environment)
     {
         _environment = environment;
         _db = db;
         _authService = new(_db);
+        _documentService = new(_db, _environment);
+        _logger = logger;
     }
 
     [BindProperty]
-    public IFormFile UploadKTP { get; set; }
+    public IFormFile Upload { get; set; }
 
-    [BindProperty]
-    public IFormFile UploadCV { get; set; }
+    public Document? DocumentKTP { get; set; }
+    public Document? DocumentCV { get; set; }
+    public Document? DocumentVideo { get; set; }
 
-    [BindProperty]
-    public IFormFile UploadVideo { get; set; }
-
-    public void OnGet()
-    {
-
-    }
-
-    public async Task OnPostKtpAsync()
+    public async Task OnGetAsync()
     {
         User user = await GetUser() ?? throw new InvalidOperationException("User is not found.");
-        await UploadFile(UploadKTP, user.Id + "_" + "KTP" + Path.GetExtension(UploadKTP.FileName));
+        DocumentKTP = await _documentService.GetDocumentByTypeAsync(user, DocumentType.KTP);
+        DocumentCV = await _documentService.GetDocumentByTypeAsync(user, DocumentType.CV);
+        DocumentVideo = await _documentService.GetDocumentByTypeAsync(user, DocumentType.Video);
     }
 
-    public async Task OnPostCvAsync()
+    public async Task<IActionResult> OnPostKtpAsync()
     {
         User user = await GetUser() ?? throw new InvalidOperationException("User is not found.");
-        await UploadFile(UploadCV, user.Id + "_" + "CV" + Path.GetExtension(UploadCV.FileName));
+        await _documentService.UploadDocumentAsync(
+            user,
+            Upload,
+            user.Id + "_" + "KTP" + Path.GetExtension(Upload.FileName),
+            DocumentType.KTP
+        );
+        return RedirectToPage("/Dashboard/File");
     }
 
-    public async Task OnPostVideoAsync()
+    public async Task<IActionResult> OnPostCvAsync()
     {
         User user = await GetUser() ?? throw new InvalidOperationException("User is not found.");
-        await UploadFile(UploadVideo, user.Id + "_" + "Video" + Path.GetExtension(UploadVideo.FileName));
+        await _documentService.UploadDocumentAsync(
+            user,
+            Upload,
+            user.Id + "_" + "CV" + Path.GetExtension(Upload.FileName),
+            DocumentType.CV
+        );
+        return RedirectToPage("/Dashboard/File");
     }
 
-    private async Task UploadFile(IFormFile file, string name)
+    public async Task<IActionResult> OnPostVideoAsync()
     {
-        string folderPath = Path.Combine(_environment.ContentRootPath, "Storage");
-        Directory.CreateDirectory(folderPath);
-        string oldFilePath = Path.Combine(folderPath, file.FileName);
-        string newFilePath = Path.Combine(folderPath, name);
-        using (var fileStream = new FileStream(oldFilePath, FileMode.Create))
-        {
-            await file.CopyToAsync(fileStream);
-        }
-        System.IO.File.Move(oldFilePath, newFilePath);
+        User user = await GetUser() ?? throw new InvalidOperationException("User is not found.");
+        await _documentService.UploadDocumentAsync(
+            user,
+            Upload,
+            user.Id + "_" + "Video" + Path.GetExtension(Upload.FileName),
+            DocumentType.Video
+        );
+        return RedirectToPage("/Dashboard/File");
     }
 
     private async Task<User?> GetUser()
