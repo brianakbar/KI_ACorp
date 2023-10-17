@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
-using ACorp.Authentication;
+using ACorp.Application;
 using KiAcorp.Data;
 using KiAcorp.Models;
 using Microsoft.AspNetCore.Authentication;

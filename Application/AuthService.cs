@@ -1,4 +1,4 @@
-namespace ACorp.Authentication;
+namespace ACorp.Application;
 
 using System.Security.Claims;
 using KiAcorp.Data;
@@ -10,12 +10,15 @@ using Microsoft.EntityFrameworkCore;
 public class AuthService
 {
     const string AuthenticationType = "CookieAuth";
+    AuthCryptoType authCryptoType = AuthCryptoType.RC4;
 
     readonly ApplicationDbContext _db;
+    readonly CryptoService _cryptoService;
 
     public AuthService(ApplicationDbContext db)
     {
         _db = db;
+        _cryptoService = new();
     }
 
     public async Task<bool> RegisterAsync(User newUser)
@@ -38,7 +41,7 @@ public class AuthService
             List<Claim> claims = new() {
                 new(ClaimTypes.Name, foundUser.Fullname),
                 new(ClaimTypes.Email, email),
-                new(ClaimTypes.MobilePhone, foundUser.AesPhoneNumber ?? "")
+                new(ClaimTypes.MobilePhone, GetPhoneNumber(foundUser) ?? "")
             };
             ClaimsIdentity identity = new(claims, AuthenticationType);
             ClaimsPrincipal principal = new(identity);
@@ -69,9 +72,44 @@ public class AuthService
 
         if (foundUser != null)
         {
-            if (foundUser.AesPassword == password) return foundUser;
+            if (ComparePassword(foundUser, password)) return foundUser;
         }
 
         return null;
+    }
+
+    bool ComparePassword(User user, string password)
+    {
+        if (authCryptoType == AuthCryptoType.AES)
+        {
+            return user.AesPassword == _cryptoService.EncryptAESFromString(password);
+        }
+        else if (authCryptoType == AuthCryptoType.DES)
+        {
+            return user.DesPassword == _cryptoService.EncryptDESFromString(password);
+        }
+        else
+        {
+            return user.Rc4Password == _cryptoService.EncryptRC4FromString(password);
+        }
+    }
+
+    string GetPhoneNumber(User user)
+    {
+        if (authCryptoType == AuthCryptoType.AES)
+        {
+            if (user.AesPhoneNumber == null) return "";
+            return _cryptoService.DecryptAESFromString(user.AesPhoneNumber);
+        }
+        else if (authCryptoType == AuthCryptoType.DES)
+        {
+            if (user.DesPhoneNumber == null) return "";
+            return _cryptoService.DecryptDESFromString(user.DesPhoneNumber);
+        }
+        else
+        {
+            if (user.Rc4PhoneNumber == null) return "";
+            return _cryptoService.DecryptRC4FromString(user.Rc4PhoneNumber);
+        }
     }
 }
