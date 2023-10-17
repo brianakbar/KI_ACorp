@@ -14,11 +14,18 @@ public class Cryptography
     public static ICipherParameters KeyParameterGeneration(int keySize)
     {
         CipherKeyGenerator keyGen = new();
-        SecureRandom random = new();
-        keyGen.Init(new KeyGenerationParameters(random, keySize));
+        SecureRandom secureRandom = new();
+        keyGen.Init(new KeyGenerationParameters(secureRandom, 128));
         KeyParameter keyParam = keyGen.GenerateKeyParameter();
         return keyParam;
     }
+
+    public static ICipherParameters KeyParameterGenerationWithKey(byte[] myKey)
+    {
+        ICipherParameters keyParam = new KeyParameter(myKey);
+        return keyParam;
+    }
+
 
     // AES ECB Encryption
     public static byte[] AesEcbPaddedEncrypt(ICipherParameters keyParam, byte[] plainTextData)

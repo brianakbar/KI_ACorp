@@ -12,7 +12,8 @@
         </div>
         <div class="card-body">
                 <p>Silahkan upload KTP Anda dalam jpg, jpeg, atau png.</p>
-                <input type="file" asp-for="UploadKTP" accept="image/png, image/jpeg, image/jpg" />
+                <input type="file" required asp-for="Upload" accept="image/png, image/jpeg, image/jpg" />
+                <input type="text" required asp-for="FileType" value="ID_CARD" hidden />
         </div>
         <div class="card-footer">
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -25,7 +26,8 @@
         </div>
         <div class="card-body">
                 <p>Silahkan upload CV Anda dalam format doc, docx, atau pdf.</p>
-                <input type="file" asp-for="UploadCV" accept=".doc,.docs,.pdf" />
+                <input type="file" required asp-for="Upload" accept=".doc,.docs,.pdf" />
+                <input type="text" required asp-for="FileType" value="CV" hidden />
         </div>
         <div class="card-footer">
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -38,7 +40,8 @@
         </div>
         <div class="card-body">
                 <p>Silahkan upload Video Anda</p>
-                <input type="file" asp-for="UploadVideo" accept="video/*" />
+                <input type="file" required asp-for="Upload" accept="video/*" />
+                <input type="text" required asp-for="FileType" value="VIDEO" hidden />
         </div>
         <div class="card-footer">
                 <button type="submit" class="btn btn-primary">Submit</button>

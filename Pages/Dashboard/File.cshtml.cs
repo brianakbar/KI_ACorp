@@ -1,7 +1,8 @@
 using System.Security.Claims;
-using ACorp.Authentication;
+using System.Text;
 using KiAcorp.Data;
 using KiAcorp.Models;
+using KiAcorp.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,65 +14,60 @@ public class FileModel : PageModel
 {
     private readonly IWebHostEnvironment _environment;
     private readonly ApplicationDbContext _db;
-    private readonly AuthService _authService;
 
-    public FileModel(ApplicationDbContext db, IWebHostEnvironment environment)
+    [BindProperty]
+    public IFormFile Upload { get; set; }
+
+    [BindProperty]
+    public string FileType { get; set; }
+    public FileModel(IWebHostEnvironment environment, ApplicationDbContext db)
     {
         _environment = environment;
         _db = db;
-        _authService = new(_db);
     }
-
-    [BindProperty]
-    public IFormFile UploadKTP { get; set; }
-
-    [BindProperty]
-    public IFormFile UploadCV { get; set; }
-
-    [BindProperty]
-    public IFormFile UploadVideo { get; set; }
 
     public void OnGet()
     {
-
     }
 
     public async Task OnPostKtpAsync()
     {
-        User user = await GetUser() ?? throw new InvalidOperationException("User is not found.");
-        await UploadFile(UploadKTP, user.Id + "_" + "KTP" + Path.GetExtension(UploadKTP.FileName));
-    }
+        var fileId = Guid.NewGuid().ToString();
+        var myKey = Encoding.UTF8.GetBytes("ThisIsAKeyForAES");
+        var keyParam = Cryptography.KeyParameterGenerationWithKey(myKey);
+        var encryptedFilePath = Path.Combine(_environment.ContentRootPath, "Storage", fileId);
 
-    public async Task OnPostCvAsync()
-    {
-        User user = await GetUser() ?? throw new InvalidOperationException("User is not found.");
-        await UploadFile(UploadCV, user.Id + "_" + "CV" + Path.GetExtension(UploadCV.FileName));
-    }
+        using MemoryStream encryptionStream = new();
+        await Upload.CopyToAsync(encryptionStream);
+        var fileData = encryptionStream.ToArray();
 
-    public async Task OnPostVideoAsync()
-    {
-        User user = await GetUser() ?? throw new InvalidOperationException("User is not found.");
-        await UploadFile(UploadVideo, user.Id + "_" + "Video" + Path.GetExtension(UploadVideo.FileName));
-    }
+        var encryptedFile = Cryptography.AesEcbPaddedEncrypt(keyParam, fileData);
 
-    private async Task UploadFile(IFormFile file, string name)
-    {
-        string folderPath = Path.Combine(_environment.ContentRootPath, "Storage");
-        Directory.CreateDirectory(folderPath);
-        string oldFilePath = Path.Combine(folderPath, file.FileName);
-        string newFilePath = Path.Combine(folderPath, name);
-        using (var fileStream = new FileStream(oldFilePath, FileMode.Create))
-        {
-            await file.CopyToAsync(fileStream);
-        }
-        System.IO.File.Move(oldFilePath, newFilePath);
-    }
+        using var encryptedFileStream = new FileStream(encryptedFilePath, FileMode.Create);
+        encryptedFileStream.Write(encryptedFile, 0, encryptedFile.Length);
 
-    private async Task<User?> GetUser()
-    {
         ClaimsIdentity? claimsIdentity = User.Identity as ClaimsIdentity;
-        string email = (claimsIdentity?.FindFirst(ClaimTypes.Email)?.Value) ?? throw new InvalidOperationException("User email is not found.");
+        var userEmail = claimsIdentity?.FindFirst(ClaimTypes.Email)?.Value;
+        var userId = _db.Users.FirstOrDefault(u => u.Email == userEmail)?.Id;
+        if (userId == null) return;
+        Document document = new()
+        {
+            Name = fileId,
+            Cipher = "AES-128",
+            FileExtension = Upload.ContentType,
+            Type = FileType,
+            UserId = (int)userId,
+        };
+        await _db.Documents.AddAsync(document);
+        await _db.SaveChangesAsync();
 
-        return await _authService.FindUserAsync(email);
+        // using var fileStream = new FileStream(encryptedFilePath, FileMode.Open);
+        // using MemoryStream decryptedStream = new();
+        // await fileStream.CopyToAsync(decryptedStream);
+        // var fileDataEncrypted = decryptedStream.ToArray();
+        // var decryptedFile = Cryptography.AesEcbPaddedDecrypt(keyParam, fileDataEncrypted);
+        // var decryptedFilePath = Path.Combine(_environment.ContentRootPath, "Storage", "_decrypted", Upload.FileName);
+        // using var decryptedFileStream = new FileStream(decryptedFilePath, FileMode.Create);
+        // decryptedFileStream.Write(decryptedFile, 0, decryptedFile.Length);
     }
 }
