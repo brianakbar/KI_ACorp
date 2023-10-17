@@ -26,21 +26,26 @@ public class Cryptography
         return keyParam;
     }
 
+    public static ICipherParameters KeyParameterGenerationWithKeyAndIV(byte[] myKey, byte[] myIV)
+    {
+        ICipherParameters keyParam = new ParametersWithIV(new KeyParameter(myKey), myIV);
+        return keyParam;
+    }
 
     // AES ECB Encryption
-    public static byte[] AesEcbPaddedEncrypt(ICipherParameters keyParam, byte[] plainTextData)
+    public static byte[] AesCbcPaddedEncrypt(ICipherParameters keyParamWithIV, byte[] plainTextData)
     {
         IBlockCipher symmetricBlockCipher = new AesEngine();
-        IBlockCipher symmetricBlockMode = new EcbBlockCipher(symmetricBlockCipher);
+        IBlockCipher symmetricBlockMode = new CbcBlockCipher(symmetricBlockCipher);
         IBlockCipherPadding padding = new Pkcs7Padding();
 
-        PaddedBufferedBlockCipher ecbChiper = new(symmetricBlockMode, padding);
+        PaddedBufferedBlockCipher cbcChiper = new(symmetricBlockMode, padding);
 
-        ecbChiper.Init(true, keyParam);
-        int blockSize = ecbChiper.GetBlockSize();
-        byte[] cipherTextData = new byte[ecbChiper.GetOutputSize(plainTextData.Length)];
-        int processLength = ecbChiper.ProcessBytes(plainTextData, 0, plainTextData.Length, cipherTextData, 0);
-        int finalLength = ecbChiper.DoFinal(cipherTextData, processLength);
+        cbcChiper.Init(true, keyParamWithIV);
+        int blockSize = cbcChiper.GetBlockSize();
+        byte[] cipherTextData = new byte[cbcChiper.GetOutputSize(plainTextData.Length)];
+        int processLength = cbcChiper.ProcessBytes(plainTextData, 0, plainTextData.Length, cipherTextData, 0);
+        int finalLength = cbcChiper.DoFinal(cipherTextData, processLength);
         byte[] finalCipherTextData = new byte[cipherTextData.Length - (blockSize - finalLength)];
         Array.Copy(cipherTextData, 0, finalCipherTextData, 0, finalCipherTextData.Length);
 
@@ -48,19 +53,19 @@ public class Cryptography
     }
 
     // AES ECB Decryption
-    public static byte[] AesEcbPaddedDecrypt(ICipherParameters keyParam, byte[] cipherTextData)
+    public static byte[] AesCbcPaddedDecrypt(ICipherParameters keyParamWithIV, byte[] cipherTextData)
     {
         IBlockCipher symmetricBlockCipher = new AesEngine();
-        IBlockCipher symmetricBlockMode = new EcbBlockCipher(symmetricBlockCipher);
+        IBlockCipher symmetricBlockMode = new CbcBlockCipher(symmetricBlockCipher);
         IBlockCipherPadding padding = new Pkcs7Padding();
 
-        PaddedBufferedBlockCipher ecbChiper = new(symmetricBlockMode, padding);
+        PaddedBufferedBlockCipher cbcChiper = new(symmetricBlockMode, padding);
 
-        ecbChiper.Init(false, keyParam);
-        int blockSize = ecbChiper.GetBlockSize();
-        byte[] plainTextData = new byte[ecbChiper.GetOutputSize(cipherTextData.Length)];
-        int processLength = ecbChiper.ProcessBytes(cipherTextData, 0, cipherTextData.Length, plainTextData, 0);
-        int finalLength = ecbChiper.DoFinal(plainTextData, processLength);
+        cbcChiper.Init(false, keyParamWithIV);
+        int blockSize = cbcChiper.GetBlockSize();
+        byte[] plainTextData = new byte[cbcChiper.GetOutputSize(cipherTextData.Length)];
+        int processLength = cbcChiper.ProcessBytes(cipherTextData, 0, cipherTextData.Length, plainTextData, 0);
+        int finalLength = cbcChiper.DoFinal(plainTextData, processLength);
         byte[] finalPlainTextData = new byte[plainTextData.Length - (blockSize - finalLength)];
         Array.Copy(plainTextData, 0, finalPlainTextData, 0, finalPlainTextData.Length);
 
@@ -68,42 +73,63 @@ public class Cryptography
     }
 
     // DES ECB Encryption
-    public static byte[] DesEcbPaddedEncrypt(ICipherParameters keyParam, byte[] plainTextData)
+    public static byte[] DesCbcPaddedEncrypt(ICipherParameters keyParamWithIV, byte[] plainTextData)
     {
         IBlockCipher symmetricBlockCipher = new DesEngine();
-        IBlockCipher symmetricBlockMode = new EcbBlockCipher(symmetricBlockCipher);
+        IBlockCipher symmetricBlockMode = new CbcBlockCipher(symmetricBlockCipher);
         IBlockCipherPadding padding = new Pkcs7Padding();
 
-        PaddedBufferedBlockCipher ecbChiper = new(symmetricBlockMode, padding);
+        PaddedBufferedBlockCipher cbcChiper = new(symmetricBlockMode, padding);
 
-        ecbChiper.Init(true, keyParam);
-        int blockSize = ecbChiper.GetBlockSize();
-        byte[] cipherTextData = new byte[ecbChiper.GetOutputSize(plainTextData.Length)];
-        int processLength = ecbChiper.ProcessBytes(plainTextData, 0, plainTextData.Length, cipherTextData, 0);
-        int finalLength = ecbChiper.DoFinal(cipherTextData, processLength);
+        cbcChiper.Init(true, keyParamWithIV);
+        int blockSize = cbcChiper.GetBlockSize();
+        byte[] cipherTextData = new byte[cbcChiper.GetOutputSize(plainTextData.Length)];
+        int processLength = cbcChiper.ProcessBytes(plainTextData, 0, plainTextData.Length, cipherTextData, 0);
+        int finalLength = cbcChiper.DoFinal(cipherTextData, processLength);
         byte[] finalCipherTextData = new byte[cipherTextData.Length - (blockSize - finalLength)];
         Array.Copy(cipherTextData, 0, finalCipherTextData, 0, finalCipherTextData.Length);
 
         return finalCipherTextData;
     }
 
-    // DES ECB Decryption
-    public static byte[] DesEcbPaddedDecrypt(ICipherParameters keyParam, byte[] cipherTextData)
+    // DES CBC Decryption
+    public static byte[] DesCbcPaddedDecrypt(ICipherParameters keyParamWithIV, byte[] cipherTextData)
     {
         IBlockCipher symmetricBlockCipher = new DesEngine();
-        IBlockCipher symmetricBlockMode = new EcbBlockCipher(symmetricBlockCipher);
+        IBlockCipher symmetricBlockMode = new CbcBlockCipher(symmetricBlockCipher);
         IBlockCipherPadding padding = new Pkcs7Padding();
 
-        PaddedBufferedBlockCipher ecbChiper = new(symmetricBlockMode, padding);
+        PaddedBufferedBlockCipher cbcChiper = new(symmetricBlockMode, padding);
 
-        ecbChiper.Init(false, keyParam);
-        int blockSize = ecbChiper.GetBlockSize();
-        byte[] plainTextData = new byte[ecbChiper.GetOutputSize(cipherTextData.Length)];
-        int processLength = ecbChiper.ProcessBytes(cipherTextData, 0, cipherTextData.Length, plainTextData, 0);
-        int finalLength = ecbChiper.DoFinal(plainTextData, processLength);
+        cbcChiper.Init(false, keyParamWithIV);
+        int blockSize = cbcChiper.GetBlockSize();
+        byte[] plainTextData = new byte[cbcChiper.GetOutputSize(cipherTextData.Length)];
+        int processLength = cbcChiper.ProcessBytes(cipherTextData, 0, cipherTextData.Length, plainTextData, 0);
+        int finalLength = cbcChiper.DoFinal(plainTextData, processLength);
         byte[] finalPlainTextData = new byte[plainTextData.Length - (blockSize - finalLength)];
         Array.Copy(plainTextData, 0, finalPlainTextData, 0, finalPlainTextData.Length);
 
         return finalPlainTextData;
+    }
+
+    // RC4 Encryption
+    public static byte[] Rc4Encrypt(ICipherParameters keyParam, byte[] plainTextData)
+    {
+        IStreamCipher rc4Engine = new RC4Engine();
+        rc4Engine.Init(true, keyParam);
+        var cipherText = new byte[plainTextData.Length];
+        rc4Engine.ProcessBytes(plainTextData, 0, plainTextData.Length, cipherText, 0);
+        return cipherText;
+    }
+
+    // RC4 Decryption
+    public static byte[] Rc4Decrypt(ICipherParameters keyParam, byte[] cipherTextData)
+    {
+        IStreamCipher rc4cipher = new RC4Engine();
+        rc4cipher.Init(false, keyParam);
+        byte[] plainText = new byte[cipherTextData.Length];
+        rc4cipher.ProcessBytes(cipherTextData, 0, cipherTextData.Length, plainText, 0);
+
+        return plainText;
     }
 }
