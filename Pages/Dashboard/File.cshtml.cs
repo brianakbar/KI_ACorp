@@ -28,37 +28,93 @@ public class FileModel : PageModel
 
     public void OnGet()
     {
+        ClaimsIdentity? claimsIdentity = User.Identity as ClaimsIdentity;
+        var userEmail = claimsIdentity?.FindFirst(ClaimTypes.Email)?.Value;
+        var userId = _db.Users.FirstOrDefault(u => u.Email == userEmail)?.Id;
+        var idCards = _db.Documents.Where(d => d.UserId == userId).Where(d => d.Type == "ID_CARD");
+        var Cvs = _db.Documents.Where(d => d.UserId == userId).Where(d => d.Type == "CV");
+        var videos = _db.Documents.Where(d => d.UserId == userId).Where(d => d.Type == "VIDEO");
     }
 
-    public async Task OnPostKtpAsync()
+    public async Task OnPostAsync()
     {
+        ClaimsIdentity? claimsIdentity = User.Identity as ClaimsIdentity;
+        var userEmail = claimsIdentity?.FindFirst(ClaimTypes.Email)?.Value;
+        var userId = _db.Users.FirstOrDefault(u => u.Email == userEmail)?.Id;
+        if (userId == null) return;
+
         var fileId = Guid.NewGuid().ToString();
-        var myKey = Encoding.UTF8.GetBytes("ThisIsAKeyForAES");
-        var keyParam = Cryptography.KeyParameterGenerationWithKey(myKey);
-        var encryptedFilePath = Path.Combine(_environment.ContentRootPath, "Storage", fileId);
+        var fileExtension = Path.GetExtension(Upload.FileName);
+
+        var myAesKey = Encoding.UTF8.GetBytes("ThisIsAKeyForAES");
+        var myAesIv = Encoding.UTF8.GetBytes("ThisIVAKeyForAES");
+        var myAeskeyParam = Cryptography.KeyParameterGenerationWithKeyAndIV(myAesKey, myAesIv);
+
+        var myDesKey = Encoding.UTF8.GetBytes("KyForDES");
+        var myDesIv = Encoding.UTF8.GetBytes("IvForDES");
+        var myDeskeyParam = Cryptography.KeyParameterGenerationWithKeyAndIV(myDesKey, myDesIv);
+
+        var myRc4Key = Encoding.UTF8.GetBytes("ThisIsMyRC4Key");
+        var myRc4keyParam = Cryptography.KeyParameterGenerationWithKey(myRc4Key);
 
         using MemoryStream encryptionStream = new();
         await Upload.CopyToAsync(encryptionStream);
         var fileData = encryptionStream.ToArray();
 
-        var encryptedFile = Cryptography.AesEcbPaddedEncrypt(keyParam, fileData);
+        // encrypt with rc4
+        DateTime startRc4 = DateTime.Now;
+        var encryptedRc4File = Cryptography.Rc4Encrypt(myRc4keyParam, fileData);
+        DateTime endRc4 = DateTime.Now;
+        var encryptedRc4FilePath = Path.Combine(_environment.ContentRootPath, "Storage", "rc4", fileId);
+        using var encryptedRc4FileStream = new FileStream(encryptedRc4FilePath, FileMode.Create);
+        encryptedRc4FileStream.Write(encryptedRc4File, 0, encryptedRc4File.Length);
+        Document document3 = new()
+        {
+            Name = fileId,
+            Cipher = "RC4",
+            FileExtension = fileExtension,
+            Type = FileType,
+            UserId = (int)userId,
+            EncryptDuration = endRc4 - startRc4
+        };
+        await _db.Documents.AddAsync(document3);
 
-        using var encryptedFileStream = new FileStream(encryptedFilePath, FileMode.Create);
-        encryptedFileStream.Write(encryptedFile, 0, encryptedFile.Length);
+        // encrypt with des cbc
+        DateTime startDes = DateTime.Now;
+        var encryptedDesFile = Cryptography.DesCbcPaddedEncrypt(myDeskeyParam, fileData);
+        DateTime endDes = DateTime.Now;
+        var encryptedDesFilePath = Path.Combine(_environment.ContentRootPath, "Storage", "des", fileId);
+        using var encryptedDesFileStream = new FileStream(encryptedDesFilePath, FileMode.Create);
+        encryptedDesFileStream.Write(encryptedDesFile, 0, encryptedDesFile.Length);
+        Document document2 = new()
+        {
+            Name = fileId,
+            Cipher = "DES-64-CBC",
+            FileExtension = fileExtension,
+            Type = FileType,
+            UserId = (int)userId,
+            EncryptDuration = endDes - startDes
+        };
+        await _db.Documents.AddAsync(document2);
 
-        ClaimsIdentity? claimsIdentity = User.Identity as ClaimsIdentity;
-        var userEmail = claimsIdentity?.FindFirst(ClaimTypes.Email)?.Value;
-        var userId = _db.Users.FirstOrDefault(u => u.Email == userEmail)?.Id;
-        if (userId == null) return;
+        // encrypt with aes 128 cbc
+        DateTime startAes = DateTime.Now;
+        var encryptedAesFile = Cryptography.AesCbcPaddedEncrypt(myAeskeyParam, fileData);
+        DateTime endAes = DateTime.Now;
+        var encryptedAesFilePath = Path.Combine(_environment.ContentRootPath, "Storage", "aes", fileId);
+        using var encryptedFileStream = new FileStream(encryptedAesFilePath, FileMode.Create);
+        encryptedFileStream.Write(encryptedAesFile, 0, encryptedAesFile.Length);
         Document document = new()
         {
             Name = fileId,
-            Cipher = "AES-128",
-            FileExtension = Upload.ContentType,
+            Cipher = "AES-128-CBC",
+            FileExtension = fileExtension,
             Type = FileType,
             UserId = (int)userId,
+            EncryptDuration = endAes - startAes
         };
         await _db.Documents.AddAsync(document);
+
         await _db.SaveChangesAsync();
 
         // using var fileStream = new FileStream(encryptedFilePath, FileMode.Open);
