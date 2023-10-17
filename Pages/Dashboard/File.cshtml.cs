@@ -79,6 +79,15 @@ public class FileModel : PageModel
         };
         await _db.Documents.AddAsync(document3);
 
+        // decrypt with rc4
+        DateTime startRc4Decrypt = DateTime.Now;
+        var decryptedRc4File = Cryptography.Rc4Decrypt(myRc4keyParam, encryptedRc4File);
+        DateTime endRc4Decrypt = DateTime.Now;
+        var decryptedRc4FilePath = Path.Combine(_environment.ContentRootPath, "Storage", "rc4_decrypted", Upload.FileName);
+        using var decryptedRc4FileStream = new FileStream(decryptedRc4FilePath, FileMode.Create);
+        decryptedRc4FileStream.Write(decryptedRc4File, 0, decryptedRc4File.Length);
+        document3.DecryptDuration = endRc4Decrypt - startRc4Decrypt;
+
         // encrypt with des cbc
         DateTime startDes = DateTime.Now;
         var encryptedDesFile = Cryptography.DesCbcPaddedEncrypt(myDeskeyParam, fileData);
@@ -96,6 +105,15 @@ public class FileModel : PageModel
             EncryptDuration = endDes - startDes
         };
         await _db.Documents.AddAsync(document2);
+
+        // decrypt with des cbc
+        DateTime startDesDecrypt = DateTime.Now;
+        var decryptedDesFile = Cryptography.DesCbcPaddedDecrypt(myDeskeyParam, encryptedDesFile);
+        DateTime endDesDecrypt = DateTime.Now;
+        var decryptedDesFilePath = Path.Combine(_environment.ContentRootPath, "Storage", "des_decrypted", Upload.FileName);
+        using var decryptedDesFileStream = new FileStream(decryptedDesFilePath, FileMode.Create);
+        decryptedDesFileStream.Write(decryptedDesFile, 0, decryptedDesFile.Length);
+        document2.DecryptDuration = endDesDecrypt - startDesDecrypt;
 
         // encrypt with aes 128 cbc
         DateTime startAes = DateTime.Now;
@@ -115,15 +133,25 @@ public class FileModel : PageModel
         };
         await _db.Documents.AddAsync(document);
 
-        await _db.SaveChangesAsync();
+        // decrypt with aes 128 cbc
+        DateTime startAesDecrypt = DateTime.Now;
+        var decryptedAesFile = Cryptography.AesCbcPaddedDecrypt(myAeskeyParam, encryptedAesFile);
+        DateTime endAesDecrypt = DateTime.Now;
+        var decryptedAesFilePath = Path.Combine(_environment.ContentRootPath, "Storage", "aes_decrypted", Upload.FileName);
+        using var decryptedFileStream = new FileStream(decryptedAesFilePath, FileMode.Create);
+        decryptedFileStream.Write(decryptedAesFile, 0, decryptedAesFile.Length);
+        document.DecryptDuration = endAesDecrypt - startAesDecrypt;
 
-        // using var fileStream = new FileStream(encryptedFilePath, FileMode.Open);
-        // using MemoryStream decryptedStream = new();
-        // await fileStream.CopyToAsync(decryptedStream);
-        // var fileDataEncrypted = decryptedStream.ToArray();
-        // var decryptedFile = Cryptography.AesEcbPaddedDecrypt(keyParam, fileDataEncrypted);
-        // var decryptedFilePath = Path.Combine(_environment.ContentRootPath, "Storage", "_decrypted", Upload.FileName);
-        // using var decryptedFileStream = new FileStream(decryptedFilePath, FileMode.Create);
-        // decryptedFileStream.Write(decryptedFile, 0, decryptedFile.Length);
+
+        await _db.SaveChangesAsync();
     }
+
 }
+// using var fileStream = new FileStream(encryptedFilePath, FileMode.Open);
+// using MemoryStream decryptedStream = new();
+// await fileStream.CopyToAsync(decryptedStream);
+// var fileDataEncrypted = decryptedStream.ToArray();
+// var decryptedFile = Cryptography.AesEcbPaddedDecrypt(keyParam, fileDataEncrypted);
+// var decryptedFilePath = Path.Combine(_environment.ContentRootPath, "Storage", "_decrypted", Upload.FileName);
+// using var decryptedFileStream = new FileStream(decryptedFilePath, FileMode.Create);
+// decryptedFileStream.Write(decryptedFile, 0, decryptedFile.Length);
