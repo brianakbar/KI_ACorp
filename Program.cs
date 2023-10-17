@@ -1,4 +1,4 @@
-using KiAcorp.Data;
+using ACorp.Data;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql;
 

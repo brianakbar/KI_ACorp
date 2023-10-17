@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using ACorp.Application;
-using KiAcorp.Data;
-using KiAcorp.Models;
+using ACorp.Data;
+using ACorp.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -56,4 +56,3 @@ public class Credential
     [DataType(DataType.Password)]
     public string Password { get; set; } = "";
 }
-

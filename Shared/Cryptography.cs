@@ -5,11 +5,10 @@ using Org.BouncyCastle.Crypto.Paddings;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 
-namespace KiAcorp.Shared;
+namespace ACorp.Shared;
 
 public class Cryptography
 {
-
     // Key generate
     public static ICipherParameters KeyParameterGeneration(int keySize)
     {
@@ -32,7 +31,7 @@ public class Cryptography
         return keyParam;
     }
 
-    // AES ECB Encryption
+    // AES CBC Encryption
     public static byte[] AesCbcPaddedEncrypt(ICipherParameters keyParamWithIV, byte[] plainTextData)
     {
         IBlockCipher symmetricBlockCipher = new AesEngine();
@@ -49,10 +48,10 @@ public class Cryptography
         byte[] finalCipherTextData = new byte[cipherTextData.Length - (blockSize - finalLength)];
         Array.Copy(cipherTextData, 0, finalCipherTextData, 0, finalCipherTextData.Length);
 
-        return finalCipherTextData;
+        return cipherTextData;
     }
 
-    // AES ECB Decryption
+    // AES CBC Decryption
     public static byte[] AesCbcPaddedDecrypt(ICipherParameters keyParamWithIV, byte[] cipherTextData)
     {
         IBlockCipher symmetricBlockCipher = new AesEngine();
@@ -69,10 +68,10 @@ public class Cryptography
         byte[] finalPlainTextData = new byte[plainTextData.Length - (blockSize - finalLength)];
         Array.Copy(plainTextData, 0, finalPlainTextData, 0, finalPlainTextData.Length);
 
-        return finalPlainTextData;
+        return plainTextData;
     }
 
-    // DES ECB Encryption
+    // DES CBC Encryption
     public static byte[] DesCbcPaddedEncrypt(ICipherParameters keyParamWithIV, byte[] plainTextData)
     {
         IBlockCipher symmetricBlockCipher = new DesEngine();
@@ -86,10 +85,10 @@ public class Cryptography
         byte[] cipherTextData = new byte[cbcChiper.GetOutputSize(plainTextData.Length)];
         int processLength = cbcChiper.ProcessBytes(plainTextData, 0, plainTextData.Length, cipherTextData, 0);
         int finalLength = cbcChiper.DoFinal(cipherTextData, processLength);
-        byte[] finalCipherTextData = new byte[cipherTextData.Length - (blockSize - finalLength)];
+        byte[] finalCipherTextData = new byte[processLength + finalLength];
         Array.Copy(cipherTextData, 0, finalCipherTextData, 0, finalCipherTextData.Length);
 
-        return finalCipherTextData;
+        return cipherTextData;
     }
 
     // DES CBC Decryption
@@ -106,10 +105,10 @@ public class Cryptography
         byte[] plainTextData = new byte[cbcChiper.GetOutputSize(cipherTextData.Length)];
         int processLength = cbcChiper.ProcessBytes(cipherTextData, 0, cipherTextData.Length, plainTextData, 0);
         int finalLength = cbcChiper.DoFinal(plainTextData, processLength);
-        byte[] finalPlainTextData = new byte[plainTextData.Length - (blockSize - finalLength)];
+        byte[] finalPlainTextData = new byte[processLength + finalLength];
         Array.Copy(plainTextData, 0, finalPlainTextData, 0, finalPlainTextData.Length);
 
-        return finalPlainTextData;
+        return plainTextData;
     }
 
     // RC4 Encryption
@@ -119,7 +118,11 @@ public class Cryptography
         rc4Engine.Init(true, keyParam);
         var cipherText = new byte[plainTextData.Length];
         rc4Engine.ProcessBytes(plainTextData, 0, plainTextData.Length, cipherText, 0);
-        return cipherText;
+        int finalLength = plainTextData.Length;
+        byte[] finalCiphertext = new byte[finalLength];
+        Array.Copy(cipherText, finalCiphertext, finalLength);
+
+        return finalCiphertext;
     }
 
     // RC4 Decryption

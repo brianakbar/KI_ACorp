@@ -1,8 +1,8 @@
 using System.Security.Claims;
 using System.Text;
-using KiAcorp.Data;
-using KiAcorp.Models;
-using KiAcorp.Shared;
+using ACorp.Data;
+using ACorp.Models;
+using ACorp.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;

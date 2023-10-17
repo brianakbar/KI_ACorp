@@ -1,7 +1,7 @@
 namespace ACorp.Application;
 
 using System.Text;
-using KiAcorp.Shared;
+using ACorp.Shared;
 using Org.BouncyCastle.Crypto;
 
 public class CryptoService
@@ -14,32 +14,47 @@ public class CryptoService
 
     public string EncryptAESFromString(string data)
     {
-        return Encoding.UTF8.GetString(EncryptAES(Encoding.UTF8.GetBytes(data)));
+        byte[] stringByte = Encoding.UTF8.GetBytes(data);
+        string base64String = Convert.ToBase64String(stringByte);
+        byte[] base64Byte = Convert.FromBase64String(base64String);
+        return Convert.ToBase64String(EncryptAES(base64Byte));
     }
 
     public string DecryptAESFromString(string data)
     {
-        return Encoding.UTF8.GetString(DecryptAES(Encoding.UTF8.GetBytes(data)));
+        string base64String = Convert.ToBase64String(DecryptAES(Convert.FromBase64String(data)));
+        string stringReal = Encoding.UTF8.GetString(Convert.FromBase64String(base64String));
+        return stringReal;
     }
 
     public string EncryptDESFromString(string data)
     {
-        return Encoding.UTF8.GetString(EncryptDES(Encoding.UTF8.GetBytes(data)));
+        byte[] stringByte = Encoding.UTF8.GetBytes(data);
+        string base64String = Convert.ToBase64String(stringByte);
+        byte[] base64Byte = Convert.FromBase64String(base64String);
+        return Convert.ToBase64String(EncryptDES(base64Byte));
     }
 
     public string DecryptDESFromString(string data)
     {
-        return Encoding.UTF8.GetString(DecryptDES(Encoding.UTF8.GetBytes(data)));
+        string base64String = Convert.ToBase64String(DecryptDES(Convert.FromBase64String(data)));
+        string stringReal = Encoding.UTF8.GetString(Convert.FromBase64String(base64String));
+        return stringReal;
     }
 
     public string EncryptRC4FromString(string data)
     {
-        return Encoding.UTF8.GetString(EncryptRC4(Encoding.UTF8.GetBytes(data)));
+        byte[] stringByte = Encoding.UTF8.GetBytes(data);
+        string base64String = Convert.ToBase64String(stringByte);
+        byte[] base64Byte = Convert.FromBase64String(base64String);
+        return Convert.ToBase64String(EncryptRC4(base64Byte));
     }
 
     public string DecryptRC4FromString(string data)
     {
-        return Encoding.UTF8.GetString(DecryptRC4(Encoding.UTF8.GetBytes(data)));
+        string base64String = Convert.ToBase64String(DecryptRC4(Convert.FromBase64String(data)));
+        string stringReal = Encoding.UTF8.GetString(Convert.FromBase64String(base64String));
+        return stringReal;
     }
 
     public byte[] EncryptAES(byte[] data)

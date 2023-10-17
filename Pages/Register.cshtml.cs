@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text;
 using ACorp.Application;
-using KiAcorp.Data;
-using KiAcorp.Models;
+using ACorp.Data;
+using ACorp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;

@@ -1,8 +1,8 @@
 namespace ACorp.Application;
 
 using System.Security.Claims;
-using KiAcorp.Data;
-using KiAcorp.Models;
+using ACorp.Data;
+using ACorp.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

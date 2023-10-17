@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace KiAcorp.Models;
+namespace ACorp.Models;
 
 public class Document
 {
