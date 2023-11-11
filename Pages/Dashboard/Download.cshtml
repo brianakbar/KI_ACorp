@@ -1,0 +1,45 @@
+@page
+@model DownloadModel
+@{
+    ViewData["Title"] = "Unduhan";
+}
+
+<h1 class="display-5 fw-bold mb-3">Unduhan</h1>
+<div class="card mb-4">
+    <div class="card-header">
+        <p class="fw-bold fs-3 m-0">KTP</p>
+    </div>
+    <div class="card-body">
+        <p>Berikut adalah KTP yang telah terunggah</p>
+        <div class="d-flex align-items-center gap-3 border p-1 rounded">
+            <button class="btn btn-primary">Unduh</button>
+            <div>@Model.KTP</div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <p class="fw-bold fs-3 m-0">CV</p>
+    </div>
+    <div class="card-body">
+        <p>Berikut adalah CV yang telah terunggah</p>
+        <div class="d-flex align-items-center gap-3 border p-1 rounded">
+            <button class="btn btn-primary">Unduh</button>
+            <div>@Model.CV</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <p class="fw-bold fs-3 m-0">Video</p>
+    </div>
+    <div class="card-body">
+        <p>Berikut adalah Video yang telah terunggah</p>
+        <div class="d-flex align-items-center gap-3 border p-1 rounded">
+            <button class="btn btn-primary">Unduh</button>
+            <div>@Model.Video</div>
+        </div>
+    </div>
+</div>
