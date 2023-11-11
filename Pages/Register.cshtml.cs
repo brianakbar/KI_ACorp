@@ -19,14 +19,12 @@ public class RegisterModel : PageModel
     private readonly ILogger<RegisterModel> _logger;
     private readonly ApplicationDbContext _db;
     private readonly AuthService _authService;
-    private readonly CryptoService _cryptoService;
 
     public RegisterModel(ApplicationDbContext db, ILogger<RegisterModel> logger)
     {
         _db = db;
         _logger = logger;
         _authService = new AuthService(_db);
-        _cryptoService = new CryptoService();
     }
 
     public void OnPostEmail()
@@ -41,12 +39,15 @@ public class RegisterModel : PageModel
         {
             Fullname = RegisterForm.FullName,
             Email = RegisterForm.Email,
-            AesPassword = _cryptoService.EncryptAESFromString(RegisterForm.Password),
-            DesPassword = _cryptoService.EncryptDESFromString(RegisterForm.Password),
-            Rc4Password = _cryptoService.EncryptRC4FromString(RegisterForm.Password),
-            AesPhoneNumber = _cryptoService.EncryptAESFromString(RegisterForm.PhoneNumber),
-            DesPhoneNumber = _cryptoService.EncryptDESFromString(RegisterForm.PhoneNumber),
-            Rc4PhoneNumber = _cryptoService.EncryptRC4FromString(RegisterForm.PhoneNumber),
+            AesPassword = CryptoService.EncryptAESFromString(RegisterForm.Password),
+            DesPassword = CryptoService.EncryptDESFromString(RegisterForm.Password),
+            Rc4Password = CryptoService.EncryptRC4FromString(RegisterForm.Password),
+            AesPhoneNumber = CryptoService.EncryptAESFromString(RegisterForm.PhoneNumber),
+            DesPhoneNumber = CryptoService.EncryptDESFromString(RegisterForm.PhoneNumber),
+            Rc4PhoneNumber = CryptoService.EncryptRC4FromString(RegisterForm.PhoneNumber),
+            AesNik = CryptoService.EncryptAESFromString(RegisterForm.NIK),
+            DesNik = CryptoService.EncryptDESFromString(RegisterForm.NIK),
+            Rc4Nik = CryptoService.EncryptRC4FromString(RegisterForm.NIK),
         };
 
         if (!await _authService.RegisterAsync(newUser)) return RedirectToPage("/register");
@@ -76,6 +77,9 @@ public class RegisterForm
     [Required]
     [DataType(DataType.PhoneNumber)]
     public string PhoneNumber { get; set; } = "";
+
+    [Required]
+    public string NIK { get; set; } = "";
 
     [Required]
     [DataType(DataType.Password)]
