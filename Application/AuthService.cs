@@ -13,12 +13,10 @@ public class AuthService
     AuthCryptoType authCryptoType = AuthCryptoType.RC4;
 
     readonly ApplicationDbContext _db;
-    readonly CryptoService _cryptoService;
 
     public AuthService(ApplicationDbContext db)
     {
         _db = db;
-        _cryptoService = new();
     }
 
     public async Task<bool> RegisterAsync(User newUser)
@@ -82,15 +80,15 @@ public class AuthService
     {
         if (authCryptoType == AuthCryptoType.AES)
         {
-            return user.AesPassword == _cryptoService.EncryptAESFromString(password);
+            return user.AesPassword == CryptoService.EncryptAESFromString(password);
         }
         else if (authCryptoType == AuthCryptoType.DES)
         {
-            return user.DesPassword == _cryptoService.EncryptDESFromString(password);
+            return user.DesPassword == CryptoService.EncryptDESFromString(password);
         }
         else
         {
-            return user.Rc4Password == _cryptoService.EncryptRC4FromString(password);
+            return user.Rc4Password == CryptoService.EncryptRC4FromString(password);
         }
     }
 
@@ -99,17 +97,17 @@ public class AuthService
         if (authCryptoType == AuthCryptoType.AES)
         {
             if (user.AesPhoneNumber == null) return "";
-            return _cryptoService.DecryptAESFromString(user.AesPhoneNumber);
+            return CryptoService.DecryptAESFromString(user.AesPhoneNumber);
         }
         else if (authCryptoType == AuthCryptoType.DES)
         {
             if (user.DesPhoneNumber == null) return "";
-            return _cryptoService.DecryptDESFromString(user.DesPhoneNumber);
+            return CryptoService.DecryptDESFromString(user.DesPhoneNumber);
         }
         else
         {
             if (user.Rc4PhoneNumber == null) return "";
-            return _cryptoService.DecryptRC4FromString(user.Rc4PhoneNumber);
+            return CryptoService.DecryptRC4FromString(user.Rc4PhoneNumber);
         }
     }
 }
