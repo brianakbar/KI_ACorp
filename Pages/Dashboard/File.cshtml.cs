@@ -6,6 +6,7 @@ using ACorp.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace ACorp.Pages.Dashboard;
 
@@ -45,6 +46,23 @@ public class FileModel : PageModel
 
         var fileId = Guid.NewGuid().ToString();
         var fileExtension = Path.GetExtension(Upload.FileName);
+
+        // remove previous file
+        var prevDoc = _db.Documents.FirstOrDefault(d => d.UserId == userId && d.FileExtension == fileExtension);
+        if (prevDoc != null)
+        {
+            String[] subPaths = new String[] { "aes", "des", "rc4" };
+            foreach (String subPath in subPaths)
+            {
+                var prevFilePath = Path.Combine(_environment.ContentRootPath, "Storage", subPath, prevDoc.Name);
+                if (System.IO.File.Exists(prevFilePath))
+                {
+                    System.IO.File.Delete(prevFilePath);
+                }
+            }
+            _db.RemoveRange(_db.Documents.Where(d => d.Name == prevDoc.Name).ToList());
+
+        }
 
         var myAesKey = Encoding.UTF8.GetBytes("ThisIsAKeyForAES");
         var myAesIv = Encoding.UTF8.GetBytes("ThisIVAKeyForAES");
