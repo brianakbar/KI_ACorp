@@ -52,6 +52,18 @@ public class AuthService
         return false;
     }
 
+    public async Task<User?> FindUserAsync(int id)
+    {
+        User? foundUser = null;
+
+        await _db.Users.ForEachAsync(user =>
+        {
+            if (user.Id == id) foundUser = user;
+        });
+
+        return foundUser;
+    }
+
     public async Task<User?> FindUserAsync(string email)
     {
         User? foundUser = null;
