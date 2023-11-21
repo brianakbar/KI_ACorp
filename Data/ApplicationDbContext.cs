@@ -12,6 +12,7 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<Document> Documents { get; set; }
+    public DbSet<RequestData> RequestData { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

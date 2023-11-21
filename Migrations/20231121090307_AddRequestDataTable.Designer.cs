@@ -3,6 +3,7 @@ using System;
 using ACorp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ACorp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231121090307_AddRequestDataTable")]
+    partial class AddRequestDataTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -120,12 +123,6 @@ namespace ACorp.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
-                    b.Property<string>("RSAPrivateKey")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("RSAPublicKey")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Rc4Nik")
                         .HasColumnType("longtext");
 
@@ -133,9 +130,6 @@ namespace ACorp.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Rc4PhoneNumber")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("SymmetricKey")
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("UpdatedAt")

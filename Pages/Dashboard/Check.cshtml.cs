@@ -18,12 +18,14 @@ public class CheckModel : PageModel
     private readonly ILogger<CheckModel> _logger;
     private readonly ApplicationDbContext _db;
     private readonly AuthService _authService;
+    private readonly RequestDataService _requestDataService;
 
     public CheckModel(ApplicationDbContext db, ILogger<CheckModel> logger)
     {
         _db = db;
         _logger = logger;
         _authService = new AuthService(_db);
+        _requestDataService = new RequestDataService(_db);
     }
 
     public void OnGet()
@@ -31,10 +33,8 @@ public class CheckModel : PageModel
 
     }
 
-    public async void OnPostRequestCheckAsync()
+    public async Task OnPostRequestCheckAsync(string email)
     {
-        string email = Request.Form["User"].ToString();
-
         User? UserToRequest = await _authService.FindUserAsync(email);
 
         if (UserToRequest == null) return;
@@ -43,5 +43,11 @@ public class CheckModel : PageModel
         var identityEmail = claimsIdentity?.FindFirst(ClaimTypes.Email)?.Value;
 
         if (UserToRequest.Email == identityEmail) return;
+
+        User? requester = await _authService.FindUserAsync(identityEmail ?? "");
+
+        if (requester == null) return;
+
+        _requestDataService.Request(requester, UserToRequest);
     }
 }
