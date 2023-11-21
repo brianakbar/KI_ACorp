@@ -1,0 +1,18 @@
+@page
+@model FileModel
+@{
+    ViewData["Title"] = "Check Data";
+}
+
+<h1 class="display-5 fw-bold mb-3">Check Data</h1>
+<div class="card mb-4">
+    <div class="card-header">
+        <p class="fw-bold fs-3 m-0">Request Check Data</p>
+    </div>
+    <form class="card-body" method="post" asp-page-handler="RequestCheck">
+        <p>Including Image and Documents</p>
+        <div class="d-flex align-items-center gap-3 border p-1 rounded">
+            <button class="btn btn-primary">Request</button>
+        </div>
+    </form>
+</div>
