@@ -11,9 +11,44 @@
     </div>
     <form class="card-body" method="post" asp-page-handler="RequestCheck">
         <p>Including Image and Documents</p>
-        <input type="text" name="email" id="email" class="form-control mb-2" placeholder="Search by email" />
+        <input type="text" name="email" id="email" class="form-control" placeholder="Search by email" />
         <div class="d-flex align-items-center gap-3 border p-1 rounded">
             <button class="btn btn-primary">Request</button>
         </div>
     </form>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <p class="fw-bold fs-3 m-0">Available Data</p>
+    </div>
+    <div class="card-body">
+        <div class="container">
+
+            <div class="table">
+                <div class="table-header">
+                    <div class="header__item"><a id="name" class="filter__link" href="#">Name</a></div>
+                    <div class="header__item"><a id="wins" class="filter__link filter__link--number"
+                            href="#">Document</a>
+                    </div>
+                    <div class="header__item"><a id="draws" class="filter__link filter__link--number"
+                            href="#">Images</a>
+                    </div>
+                    <div class="header__item"><a id="losses" class="filter__link filter__link--number"
+                            href="#">Video</a></div>
+                </div>
+                <div class="table-content">
+                    @foreach (var user in Model.RequestedUsers)
+                    {
+                        <div class="table-row">
+                            <div class="table-data">@user.Fullname</div>
+                            <div class="table-data">-</div>
+                            <div class="table-data">-</div>
+                            <div class="table-data">-</div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
