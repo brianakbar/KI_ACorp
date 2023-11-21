@@ -17,6 +17,8 @@ public class RequestDataService
 
     public void Request(User requester, User requested)
     {
+        if (IsRequestedByUser(requested, requester)) return;
+
         _db.RequestData.Add(new RequestData()
         {
             RequesterId = requester.Id,
@@ -26,20 +28,30 @@ public class RequestDataService
         _db.SaveChanges();
     }
 
-    public async Task<IEnumerable<User>> GetAllRequestedUserAsync(int userId)
+    public async Task<IEnumerable<User>> GetAllRequestedUserAsync(User requester)
     {
         List<User> users = new();
 
-        foreach (var data in _db.RequestData)
+        foreach (var data in _db.RequestData.ToList())
         {
-            if (data.RequesterId != userId) continue;
+            if (data.RequesterId != requester.Id) continue;
 
-            User? user = await _authService.FindUserAsync(userId);
+            User? user = await _authService.FindUserAsync(data.RequestedId);
             if (user == null) continue;
 
             users.Add(user);
         }
 
         return users;
+    }
+
+    bool IsRequestedByUser(User requested, User requester)
+    {
+        foreach (var data in _db.RequestData.ToList())
+        {
+            if (data.RequesterId == requester.Id && data.RequestedId == requested.Id) return true;
+        }
+
+        return false;
     }
 }
