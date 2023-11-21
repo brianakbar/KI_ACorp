@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Modes;
@@ -10,13 +12,14 @@ namespace ACorp.Shared;
 public class Cryptography
 {
     // Key generate
-    public static ICipherParameters KeyParameterGeneration(int keySize)
+    public static byte[] KeyParameterGeneration(int keySize)
     {
         CipherKeyGenerator keyGen = new();
         SecureRandom secureRandom = new();
         keyGen.Init(new KeyGenerationParameters(secureRandom, 128));
         KeyParameter keyParam = keyGen.GenerateKeyParameter();
-        return keyParam;
+        byte[] keyBytes = keyParam.GetKey();
+        return keyBytes;
     }
 
     public static ICipherParameters KeyParameterGenerationWithKey(byte[] myKey)
@@ -29,6 +32,43 @@ public class Cryptography
     {
         ICipherParameters keyParam = new ParametersWithIV(new KeyParameter(myKey), myIV);
         return keyParam;
+    }
+
+    public static (string publicKey, string privateKey) GenerateRSAKeys()
+    {
+        using RSACryptoServiceProvider rsa = new(2048); // 2048 is the key size
+        var publicKey = rsa.ToXmlString(false); // false to get the public key
+        var privateKey = rsa.ToXmlString(true); // true to get the private key
+        return (publicKey, privateKey);
+    }
+
+    public static string EncryptWithRSA(string dataToEncrypt, string publicKey)
+    {
+        using RSACryptoServiceProvider rsa = new();
+        // Import the RSA public key
+        rsa.FromXmlString(publicKey);
+        RSAParameters publicKeyParams = rsa.ExportParameters(false);
+
+        // Encrypt the data
+        byte[] encryptedData = rsa.Encrypt(Encoding.UTF8.GetBytes(dataToEncrypt), true);
+
+        // Convert encrypted data to Base64 string
+        return Convert.ToBase64String(encryptedData);
+    }
+
+    public static string DecryptWithRSA(string dataToDecrypt, string privateKey)
+    {
+        using RSACryptoServiceProvider rsa = new();
+
+        // Import the RSA private key
+        rsa.FromXmlString(privateKey);
+        RSAParameters privateKeyParams = rsa.ExportParameters(true);
+
+        // Decrypt the data
+        byte[] decryptedData = rsa.Decrypt(Convert.FromBase64String(dataToDecrypt), true);
+
+        // Convert decrypted data to string
+        return Encoding.UTF8.GetString(decryptedData);
     }
 
     // AES CBC Encryption

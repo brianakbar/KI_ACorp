@@ -134,14 +134,5 @@ public class FileModel : PageModel
         await _db.Documents.AddAsync(document);
 
         await _db.SaveChangesAsync();
-
-        // using var fileStream = new FileStream(encryptedFilePath, FileMode.Open);
-        // using MemoryStream decryptedStream = new();
-        // await fileStream.CopyToAsync(decryptedStream);
-        // var fileDataEncrypted = decryptedStream.ToArray();
-        // var decryptedFile = Cryptography.AesEcbPaddedDecrypt(keyParam, fileDataEncrypted);
-        // var decryptedFilePath = Path.Combine(_environment.ContentRootPath, "Storage", "_decrypted", Upload.FileName);
-        // using var decryptedFileStream = new FileStream(decryptedFilePath, FileMode.Create);
-        // decryptedFileStream.Write(decryptedFile, 0, decryptedFile.Length);
     }
 }
