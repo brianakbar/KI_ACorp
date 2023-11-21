@@ -1,0 +1,63 @@
+@page
+@model FileModel
+@{
+    ViewData["Title"] = "Check Allowed";
+}
+
+<h1 class="display-5 fw-bold mb-3">Check Data</h1>
+<div class="card mb-4">
+    <div class="card-header">
+        <p class="fw-bold fs-3 m-0">Request Check Data</p>
+    </div>
+    <form class="card-body" method="post" asp-page-handler="RequestCheck">
+        <p>Including Image and Documents</p>
+        <div class="d-flex align-items-center gap-3 border p-1 rounded">
+            <button class="btn btn-secondary">Allowed</button>
+        </div>
+    </form>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <p class="fw-bold fs-3 m-0">Available Data</p>
+    </div>
+    <form class="card-body" method="post" asp-page-handler="RequestCheck">
+        <p>Including Image and Documents</p>
+        <div class="container">
+
+            <div class="table">
+                <div class="table-header">
+                    <div class="header__item"><a id="name" class="filter__link" href="#">Name</a></div>
+                    <div class="header__item"><a id="wins" class="filter__link filter__link--number"
+                            href="#">Document</a>
+                    </div>
+                    <div class="header__item"><a id="draws" class="filter__link filter__link--number"
+                            href="#">Images</a>
+                    </div>
+                    <div class="header__item"><a id="losses" class="filter__link filter__link--number"
+                            href="#">Video</a></div>
+                </div>
+                <div class="table-content">
+                    <div class="table-row">
+                        <div class="table-data">User1</div>
+                        <div class="table-data">-</div>
+                        <div class="table-data">-</div>
+                        <div class="table-data">-</div>
+                    </div>
+                    <div class="table-row">
+                        <div class="table-data">User2</div>
+                        <div class="table-data">-</div>
+                        <div class="table-data">-</div>
+                        <div class="table-data">-</div>
+                    </div>
+                    <div class="table-row">
+                        <div class="table-data">User3</div>
+                        <div class="table-data">-</div>
+                        <div class="table-data">-</div>
+                        <div class="table-data">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
