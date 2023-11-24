@@ -1,5 +1,6 @@
 using ACorp.Data;
 using ACorp.Models;
+using ACorp.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace ACorp.Application;
@@ -15,9 +16,17 @@ public class RequestDataService
         _authService = new AuthService(db);
     }
 
-    public void Request(User requester, User requested)
+    public async Task Request(User requester, User requested)
     {
-        if (IsRequestedByUser(requested, requester)) return;
+        if (IsRequestedByUser(requested, requester))
+        {
+            string key = await EncryptSymmetricKey(requester);
+            EmailService.SendEmail(requester, "Key to Decrypt " + requested.Fullname + " data", "Key: " + key);
+            return;
+        }
+
+        string encryptedKey = await EncryptSymmetricKey(requester);
+        EmailService.SendEmail(requester, "Key to Decrypt " + requested.Fullname + " data", "Key: " + encryptedKey);
 
         _db.RequestData.Add(new RequestData()
         {
@@ -53,5 +62,31 @@ public class RequestDataService
         }
 
         return false;
+    }
+
+    async Task<string> EncryptSymmetricKey(User requester)
+    {
+        string symmetricKey = "ThisIsMyRC4Key";
+
+        if (string.IsNullOrEmpty(requester.RSAPrivateKey) || string.IsNullOrEmpty(requester.RSAPublicKey))
+        {
+            await CreateRSAKeys(requester);
+        }
+
+        string? publicKey = requester.RSAPublicKey ?? throw new ApplicationException("User with id: " + requester.Id + " doesn't have RSA public key.");
+
+        return Cryptography.EncryptWithRSA(symmetricKey, publicKey);
+    }
+
+    async Task CreateRSAKeys(User requester)
+    {
+        var (publicKey, privateKey) = Cryptography.GenerateRSAKeys();
+
+        requester.RSAPrivateKey = privateKey;
+        requester.RSAPublicKey = publicKey;
+
+        _db.Users.Update(requester);
+
+        await _db.SaveChangesAsync();
     }
 }
