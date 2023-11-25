@@ -16,9 +16,6 @@ namespace ACorp.Pages;
 [Authorize]
 public class CheckModel : PageModel
 {
-    [BindProperty(Name = "key")]
-    public string Key { get; set; } = "";
-
     public IEnumerable<User> RequestedUsers { get; set; } = new List<User>();
 
     private readonly IWebHostEnvironment _environment;
@@ -81,7 +78,8 @@ public class CheckModel : PageModel
         if (requestedUser == null) return NotFound();
 
         if (user.RSAPrivateKey == null) throw new ApplicationException("User with id: " + user.Id + " doesn't have private key");
-        var docKey = Cryptography.DecryptWithRSA(Key, user.RSAPrivateKey);
+        var docKey = Cryptography.DecryptWithRSA(key, user.RSAPrivateKey);
+        if (docKey != requestedUser.SymmetricKey) throw new ApplicationException("Wrong key.");
         var (decryptedFile, fileName) = await _documentService.DownloadAsync(requestedUser, docKey, DocumentType.KTP);
 
         return File(decryptedFile, "application/octet-stream", fileName);
@@ -96,7 +94,8 @@ public class CheckModel : PageModel
         if (requestedUser == null) return NotFound();
 
         if (user.RSAPrivateKey == null) throw new ApplicationException("User with id: " + user.Id + " doesn't have private key");
-        var docKey = Cryptography.DecryptWithRSA(Key, user.RSAPrivateKey);
+        var docKey = Cryptography.DecryptWithRSA(key, user.RSAPrivateKey);
+        if (docKey != requestedUser.SymmetricKey) throw new ApplicationException("Wrong key.");
         var (decryptedFile, fileName) = await _documentService.DownloadAsync(requestedUser, docKey, DocumentType.CV);
 
         return File(decryptedFile, "application/octet-stream", fileName);
@@ -111,7 +110,8 @@ public class CheckModel : PageModel
         if (requestedUser == null) return NotFound();
 
         if (user.RSAPrivateKey == null) throw new ApplicationException("User with id: " + user.Id + " doesn't have private key");
-        var docKey = Cryptography.DecryptWithRSA(Key, user.RSAPrivateKey);
+        var docKey = Cryptography.DecryptWithRSA(key, user.RSAPrivateKey);
+        if (docKey != requestedUser.SymmetricKey) throw new ApplicationException("Wrong key.");
         var (decryptedFile, fileName) = await _documentService.DownloadAsync(requestedUser, docKey, DocumentType.Video);
 
         return File(decryptedFile, "application/octet-stream", fileName);
