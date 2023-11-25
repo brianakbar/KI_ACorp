@@ -20,12 +20,12 @@ public class RequestDataService
     {
         if (IsRequestedByUser(requested, requester))
         {
-            string key = await EncryptSymmetricKey(requester);
+            string key = await EncryptSymmetricKey(requester, requested);
             EmailService.SendEmail(requester, "Key to Decrypt " + requested.Fullname + " data", "Key: " + key);
             return;
         }
 
-        string encryptedKey = await EncryptSymmetricKey(requester);
+        string encryptedKey = await EncryptSymmetricKey(requester, requested);
         EmailService.SendEmail(requester, "Key to Decrypt " + requested.Fullname + " data", "Key: " + encryptedKey);
 
         _db.RequestData.Add(new RequestData()
@@ -64,9 +64,9 @@ public class RequestDataService
         return false;
     }
 
-    async Task<string> EncryptSymmetricKey(User requester)
+    async Task<string> EncryptSymmetricKey(User requester, User requested)
     {
-        string symmetricKey = "ThisIsMyRC4Key";
+        if (requested.SymmetricKey == null) throw new ApplicationException("User with id: " + requester.Id + " doesn't have symmetric key.");
 
         if (string.IsNullOrEmpty(requester.RSAPrivateKey) || string.IsNullOrEmpty(requester.RSAPublicKey))
         {
@@ -75,7 +75,7 @@ public class RequestDataService
 
         string? publicKey = requester.RSAPublicKey ?? throw new ApplicationException("User with id: " + requester.Id + " doesn't have RSA public key.");
 
-        return Cryptography.EncryptWithRSA(symmetricKey, publicKey);
+        return Cryptography.EncryptWithRSA(requested.SymmetricKey, publicKey);
     }
 
     async Task CreateRSAKeys(User requester)

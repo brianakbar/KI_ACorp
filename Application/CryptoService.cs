@@ -1,11 +1,15 @@
 namespace ACorp.Application;
 
+using System.Security.Cryptography;
 using System.Text;
 using ACorp.Shared;
 using Org.BouncyCastle.Crypto;
 
 public class CryptoService
 {
+    static readonly int keySize = 128;
+    static readonly char[] keyChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
+
     const string AESKey = "ThisIsAKeyForAES";
     const string AESIV = "ThisIVAKeyForAES";
     const string DESKey = "KyForDES";
@@ -97,6 +101,30 @@ public class CryptoService
         ICipherParameters myRc4keyParam = CreateKey(RC4Key);
 
         return Cryptography.Rc4Decrypt(myRc4keyParam, encryptedData);
+    }
+
+    public static string GetUniqueKey()
+    {
+        return GetUniqueKey(keySize);
+    }
+
+    public static string GetUniqueKey(int size)
+    {
+        byte[] data = new byte[4 * size];
+        using (var crypto = RandomNumberGenerator.Create())
+        {
+            crypto.GetBytes(data);
+        }
+        StringBuilder result = new(size);
+        for (int i = 0; i < size; i++)
+        {
+            var rnd = BitConverter.ToUInt32(data, i * 4);
+            var idx = rnd % keyChars.Length;
+
+            result.Append(keyChars[idx]);
+        }
+
+        return result.ToString();
     }
 
 

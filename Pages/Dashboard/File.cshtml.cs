@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using System.Text;
+using ACorp.Application;
 using ACorp.Data;
 using ACorp.Models;
 using ACorp.Shared;
@@ -25,6 +26,7 @@ public class FileModel : PageModel
     {
         _environment = environment;
         _db = db;
+
     }
 
     public void OnGet()
@@ -41,14 +43,14 @@ public class FileModel : PageModel
     {
         ClaimsIdentity? claimsIdentity = User.Identity as ClaimsIdentity;
         var userEmail = claimsIdentity?.FindFirst(ClaimTypes.Email)?.Value;
-        var userId = _db.Users.FirstOrDefault(u => u.Email == userEmail)?.Id;
-        if (userId == null) return;
+        var user = _db.Users.FirstOrDefault(u => u.Email == userEmail);
+        if (user == null) return;
 
         var fileId = Guid.NewGuid().ToString();
         var fileExtension = Path.GetExtension(Upload.FileName);
 
         // remove previous file
-        var prevDoc = _db.Documents.FirstOrDefault(d => d.UserId == userId && d.FileExtension == fileExtension);
+        var prevDoc = _db.Documents.FirstOrDefault(d => d.UserId == user.Id && d.FileExtension == fileExtension);
         if (prevDoc != null)
         {
             String[] subPaths = new String[] { "aes", "des", "rc4" };
@@ -72,7 +74,18 @@ public class FileModel : PageModel
         var myDesIv = Encoding.UTF8.GetBytes("IvForDES");
         var myDeskeyParam = Cryptography.KeyParameterGenerationWithKeyAndIV(myDesKey, myDesIv);
 
-        var myRc4Key = Encoding.UTF8.GetBytes("ThisIsMyRC4Key");
+        if (string.IsNullOrEmpty(user.SymmetricKey))
+        {
+            var myRc4KeyString = CryptoService.GetUniqueKey();
+            user.SymmetricKey = myRc4KeyString;
+
+            _db.Update(user);
+            await _db.SaveChangesAsync();
+        }
+
+        // var myRc4Key = Encoding.UTF8.GetBytes("ThisIsMyRC4Key");
+        if (user.SymmetricKey == null) throw new ApplicationException("User with id: " + user.Id + " doesn't have symmetric key.");
+        var myRc4Key = Encoding.UTF8.GetBytes(user.SymmetricKey);
         var myRc4keyParam = Cryptography.KeyParameterGenerationWithKey(myRc4Key);
 
         using MemoryStream encryptionStream = new();
@@ -92,7 +105,7 @@ public class FileModel : PageModel
             Cipher = "RC4",
             FileExtension = fileExtension,
             Type = FileType,
-            UserId = (int)userId,
+            UserId = user.Id,
             EncryptDuration = endRc4 - startRc4
         };
         await _db.Documents.AddAsync(document3);
@@ -110,7 +123,7 @@ public class FileModel : PageModel
             Cipher = "DES-64-CBC",
             FileExtension = fileExtension,
             Type = FileType,
-            UserId = (int)userId,
+            UserId = user.Id,
             EncryptDuration = endDes - startDes
         };
         await _db.Documents.AddAsync(document2);
@@ -128,7 +141,7 @@ public class FileModel : PageModel
             Cipher = "AES-128-CBC",
             FileExtension = fileExtension,
             Type = FileType,
-            UserId = (int)userId,
+            UserId = user.Id,
             EncryptDuration = endAes - startAes
         };
         await _db.Documents.AddAsync(document);
