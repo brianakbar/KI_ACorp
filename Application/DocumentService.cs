@@ -26,7 +26,7 @@ public class DocumentService
         Document? doc;
         if (type == DocumentType.KTP)
         {
-            doc = _db.Documents.FirstOrDefault(d => d.UserId == user.Id && d.Cipher == "RC4");
+            doc = _db.Documents.FirstOrDefault(d => d.UserId == user.Id && d.Type == "ID_CARD" && d.Cipher == "RC4");
         }
         else if (type == DocumentType.CV)
         {
