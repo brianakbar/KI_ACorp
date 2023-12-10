@@ -52,6 +52,11 @@ public class AuthService
         return false;
     }
 
+    public async Task LogoutAsync(HttpContext context)
+    {
+        await context.SignOutAsync(AuthenticationType);
+    }
+
     public async Task<User?> FindUserAsync(int id)
     {
         User? foundUser = null;
