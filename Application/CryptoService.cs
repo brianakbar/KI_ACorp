@@ -2,6 +2,7 @@ namespace ACorp.Application;
 
 using System.Security.Cryptography;
 using System.Text;
+using ACorp.Models;
 using ACorp.Shared;
 using Org.BouncyCastle.Crypto;
 
@@ -15,6 +16,11 @@ public class CryptoService
     const string DESKey = "KyForDES";
     const string DESIV = "IvForDES";
     const string RC4Key = "ThisIsMyRC4Key";
+
+    public static byte[] ComputeSHA256(byte[] buffer)
+    {
+        return SHA256.HashData(buffer);
+    }
 
     public static string EncryptAESFromString(string data)
     {

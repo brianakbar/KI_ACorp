@@ -16,6 +16,7 @@ public class FileModel : PageModel
 {
     private readonly IWebHostEnvironment _environment;
     private readonly ApplicationDbContext _db;
+    private readonly DocumentService _documentService;
 
     [BindProperty]
     public IFormFile Upload { get; set; }
@@ -26,7 +27,7 @@ public class FileModel : PageModel
     {
         _environment = environment;
         _db = db;
-
+        _documentService = new(_environment, _db);
     }
 
     public void OnGet()
@@ -98,7 +99,10 @@ public class FileModel : PageModel
         DateTime endRc4 = DateTime.Now;
         var encryptedRc4FilePath = Path.Combine(_environment.ContentRootPath, "Storage", "rc4", fileId);
         using var encryptedRc4FileStream = new FileStream(encryptedRc4FilePath, FileMode.Create);
-        encryptedRc4FileStream.Write(encryptedRc4File, 0, encryptedRc4File.Length);
+
+        byte[] signedRc4File = await _documentService.AttachDigitalSignatureAsync(user, encryptedRc4File);
+
+        encryptedRc4FileStream.Write(signedRc4File, 0, signedRc4File.Length);
         Document document3 = new()
         {
             Name = fileId,
@@ -116,7 +120,10 @@ public class FileModel : PageModel
         DateTime endDes = DateTime.Now;
         var encryptedDesFilePath = Path.Combine(_environment.ContentRootPath, "Storage", "des", fileId);
         using var encryptedDesFileStream = new FileStream(encryptedDesFilePath, FileMode.Create);
-        encryptedDesFileStream.Write(encryptedDesFile, 0, encryptedDesFile.Length);
+
+        byte[] signedDesFile = await _documentService.AttachDigitalSignatureAsync(user, encryptedDesFile);
+
+        encryptedDesFileStream.Write(signedDesFile, 0, signedDesFile.Length);
         Document document2 = new()
         {
             Name = fileId,
@@ -134,7 +141,10 @@ public class FileModel : PageModel
         DateTime endAes = DateTime.Now;
         var encryptedAesFilePath = Path.Combine(_environment.ContentRootPath, "Storage", "aes", fileId);
         using var encryptedFileStream = new FileStream(encryptedAesFilePath, FileMode.Create);
-        encryptedFileStream.Write(encryptedAesFile, 0, encryptedAesFile.Length);
+
+        byte[] signedAesFile = await _documentService.AttachDigitalSignatureAsync(user, encryptedAesFile);
+
+        encryptedFileStream.Write(signedAesFile, 0, signedAesFile.Length);
         Document document = new()
         {
             Name = fileId,

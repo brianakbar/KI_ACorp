@@ -42,6 +42,24 @@ public class Cryptography
         return (publicKey, privateKey);
     }
 
+    public static byte[] SignWithRSA(byte[] hashData, string privateKey)
+    {
+        using RSACryptoServiceProvider rsa = new();
+
+        rsa.FromXmlString(privateKey);
+
+        return rsa.SignHash(hashData, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+    }
+
+    public static bool VerifyWithRSA(byte[] hashData, byte[] signature, string publicKey)
+    {
+        using RSACryptoServiceProvider rsa = new();
+
+        rsa.FromXmlString(publicKey);
+
+        return rsa.VerifyHash(hashData, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+    }
+
     public static string EncryptWithRSA(string dataToEncrypt, string publicKey)
     {
         using RSACryptoServiceProvider rsa = new();

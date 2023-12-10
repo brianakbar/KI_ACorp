@@ -54,6 +54,25 @@ public class RequestDataService
         return users;
     }
 
+    public async Task<byte[]> GenerateDigitalSignatureAsync(User sender, byte[] buffer)
+    {
+        byte[] hashedBuffer = CryptoService.ComputeSHA256(buffer);
+        if (sender.RSAPrivateKey == null) await CreateRSAKeys(sender);
+
+        string privateKey = sender.RSAPrivateKey ?? throw new ApplicationException("User with id: " + sender.Id + " doesn't have RSA private key.");
+
+        return Cryptography.SignWithRSA(hashedBuffer, privateKey);
+    }
+
+    public bool VerifyDigitalSignature(User sender, byte[] buffer, byte[] signature)
+    {
+        byte[] hashedBuffer = CryptoService.ComputeSHA256(buffer);
+
+        string publicKey = sender.RSAPublicKey ?? throw new ApplicationException("User with id: " + sender.Id + " doesn't have RSA public key.");
+
+        return Cryptography.VerifyWithRSA(hashedBuffer, signature, publicKey);
+    }
+
     bool IsRequestedByUser(User requested, User requester)
     {
         foreach (var data in _db.RequestData.ToList())
